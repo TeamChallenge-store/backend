@@ -27,4 +27,4 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python backend/team_challenge/manage.py test
+        python team_challenge/manage.py test
