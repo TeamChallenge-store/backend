@@ -49,7 +49,6 @@ class ProductDetailView(APIView):
         return Response(serializer.data)
 
 
-
 class CartView(APIView):
     """Операції з корзиною"""
   
@@ -58,7 +57,7 @@ class CartView(APIView):
 
         # Отримання інформації про товар з запиту
         product_id = request.data.get('product_id')
-        quantity = request.data.get('quantity', 1)  # Кількість, за замовчуванням 1
+        quantity = request.data.get('quantity', 1)  
 
         try:
             product = Product.objects.get(pk=product_id)
@@ -74,7 +73,11 @@ class CartView(APIView):
         cart_item.quantity += int(quantity)
         cart_item.save()
 
-        return Response({'success': 'Product added to cart'}, status=status.HTTP_201_CREATED)
+        # Отримання всіх товарів у корзині та серіалізація їх у відповідь
+        cart_items = CartItem.objects.filter(cart=cart)
+        serializer = CartItemSerializer(cart_items, many=True)
+
+        return Response({'cart_items': serializer.data, 'total_items': cart_items.count()}, status=status.HTTP_201_CREATED)
 
     def delete(self, request, product_id):
         """Видалення товару з корзини"""
