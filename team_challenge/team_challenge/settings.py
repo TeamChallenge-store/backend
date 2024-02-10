@@ -77,14 +77,15 @@ WSGI_APPLICATION = 'team_challenge.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',  
         'USER': 'postgres',
-        'PASSWORD': 'C2aeafeFcb664BfabEb1*5aA*CGbCE*1',
-        'HOST': 'monorail.proxy.rlwy.net',
-        'PORT': '44616',
+        'PASSWORD': 'S:;G#V9<H$_onlH?',
+        'HOST': '34.118.38.21',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
