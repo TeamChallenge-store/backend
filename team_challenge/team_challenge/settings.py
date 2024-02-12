@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'D:\backend\team_challenge\teamchallenge-2105a95396e0.json'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,13 +22,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'basket',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
+    'drf_yasg',
+    'django_extensions',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -63,23 +71,17 @@ WSGI_APPLICATION = 'team_challenge.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',  
         'USER': 'postgres',
-        'PASSWORD': 'C2aeafeFcb664BfabEb1*5aA*CGbCE*1',
-        'HOST': 'monorail.proxy.rlwy.net',
-        'PORT': '44616',
+        'PASSWORD': 'S:;G#V9<H$_onlH?',
+        'HOST': '34.118.38.21',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -123,5 +125,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'teamchallenge_backend' 
