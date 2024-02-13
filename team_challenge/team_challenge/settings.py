@@ -1,10 +1,13 @@
 from pathlib import Path
 import os
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'D:\backend\team_challenge\teamchallenge-2105a95396e0.json'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
+    str(BASE_DIR) + "/teamchallenge-2105a95396e0.json"
+)
 
 
 # Quick-start development settings - unsuitable for production
@@ -81,7 +84,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 
 # Password validation
