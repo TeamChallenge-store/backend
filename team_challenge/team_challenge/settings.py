@@ -13,14 +13,14 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm'
+SECRET_KEY = 'django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm'
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+# SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 
-DEBUG = os.getenv('DEBUG')
+# DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -84,11 +84,10 @@ DATABASES = {
         'NAME': 'postgres',  
         'USER': 'postgres',
         'PASSWORD': 'S:;G#V9<H$_onlH?',
-        'HOST': '34.118.38.21',
+        'HOST': '34.116.233.33',
         'PORT': '5432',
     }
 }
-
 
 
 # Password validation

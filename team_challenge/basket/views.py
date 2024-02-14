@@ -27,6 +27,67 @@ def filter_price_products(min_price, max_price):
 
     return products
 
+def sort_price_up(category):
+    """Сортування за зростанням ціни"""
+    products = Product.objects.all()
+
+    if category is not None:
+        products = products.filter(category=category)
+
+    return products.order_by('price')
+
+
+def sort_price_down(category):
+    """Сортування за спаданням ціни"""
+    products = Product.objects.all()
+
+    if category is not None:
+        products = products.filter(category=category)
+    return products.order_by("-price")
+
+
+def sort_rate(rate):
+    """Сортування за рейтингом"""
+    products = Product.objects.all()
+
+    if rate is not None:
+        products = products.filter(rate=rate)
+
+    return products.order_by("-rate")
+
+
+class ProductListViewPriceUp(APIView):
+    """Вивід списку продуктів за зростанням ціни"""
+    def get(self, request):
+        category = request.query_params.get("category", None)
+
+        sorted_products = sort_price_up(category)
+
+        return paginate_product_list(sorted_products, request)
+
+
+class ProductListViewPriceDown(APIView):
+    """Вивід списку продуктів за спаданням ціни"""
+
+    def get(self, request):
+        category = request.query_params.get("category", None)
+
+        sorted_products = sort_price_down(category)
+
+        return paginate_product_list(sorted_products, request)
+
+
+class ProductListViewRate(APIView):
+    """Вивід списку продуктів за рейтингом"""
+
+    def get(self, request):
+        category = request.query_params.get("category", None)
+
+        sorted_products = sort_rate(category)
+
+        return paginate_product_list(sorted_products, request)
+
+
 class ProductListView(APIView):
     """"Вивід списку продуктів"""
     def get(self, request):
