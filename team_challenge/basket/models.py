@@ -17,7 +17,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
 class Product(models.Model):
     name = models.CharField(max_length=255)
     # category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -34,7 +33,7 @@ class Product(models.Model):
         return self.name
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
     products = models.ManyToManyField(Product, through='CartItem')
 
 class CartItem(models.Model):

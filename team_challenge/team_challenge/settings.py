@@ -9,17 +9,21 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
     str(BASE_DIR) + "/teamchallenge-2105a95396e0.json"
 )
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm'
 
+# SECRET_KEY = os.getenv('SECRET_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# DEBUG = os.getenv('DEBUG')
+
+ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -80,7 +84,7 @@ DATABASES = {
         'NAME': 'postgres',  
         'USER': 'postgres',
         'PASSWORD': 'S:;G#V9<H$_onlH?',
-        'HOST': '34.118.38.21',
+        'HOST': '34.116.233.33',
         'PORT': '5432',
     }
 }
@@ -121,6 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
