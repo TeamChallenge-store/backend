@@ -1,10 +1,12 @@
-##Installation 
-Для встановлення використовуйте код:
+# Project structure
 
-bash $ git clone https://github.com/0leksandrr/team_challenge.git
-
-$ pip install -r requirements.txt
-
-$ python manage.py migrate
-
-$ python manage.py runserver
+- `/public` - static resources
+- `/dist` - deploy folder
+- `/src` - application source code
+  - [`~app`](https://feature-sliced.design/ru/docs/get-started/overview)
+  - [`~pages`](https://feature-sliced.design/ru/docs/get-started/overview)
+  - [`~widgets`](https://feature-sliced.design/ru/docs/get-started/overview)
+  - [`~entities`](https://feature-sliced.design/ru/docs/get-started/overview)
+  - [`~features`](https://feature-sliced.design/ru/docs/get-started/overview)
+  - [`~shared`](https://feature-sliced.design/ru/docs/get-started/overview)
+  - `index.ts`
