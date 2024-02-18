@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  django:
+    build: .
+    command: gunicorn team_challenge.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./team_challenge:/backend/team_challenge
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - django
