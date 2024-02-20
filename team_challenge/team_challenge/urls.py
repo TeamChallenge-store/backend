@@ -28,6 +28,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/v1/', include('basket.urls')),
+    path('api/v1/', include('basket.urls'), name='basket'),
+    path('api/v1/', include('products.urls'), name='products'),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
