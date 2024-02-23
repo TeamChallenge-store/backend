@@ -1,3 +1,12 @@
 from django.contrib import admin
+from .models import Category, Subcategory
 
-# Register your models here.
+class SubcategoryInline(admin.TabularInline):
+    model = Subcategory
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = [
+        SubcategoryInline,
+    ]
+
+admin.site.register(Category, CategoryAdmin)
