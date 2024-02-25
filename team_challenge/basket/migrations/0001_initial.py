@@ -21,14 +21,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
             ],
         ),
-        migrations.CreateModel(
-            name='Category',
-            fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField()),
-            ],
-        ),
+       
+       
         migrations.CreateModel(
             name='CartItem',
             fields=[

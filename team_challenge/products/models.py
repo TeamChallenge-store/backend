@@ -13,12 +13,12 @@ class Brand(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
+    # category = models.CharField(max_length=255, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(blank=True)
     description = models.TextField(blank=True)
     brand = models.ForeignKey(Brand, blank=True, on_delete=models.CASCADE)
-    # brand = models.CharField(max_length=255)
     quantity_in_stock = models.IntegerField()
     rate = models.IntegerField(default=0)
 
