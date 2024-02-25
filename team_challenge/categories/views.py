@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Category
 from .serializers import CategorySerializer
+from products.models import Product
+from products.serializers import ProductListSerializer
 
 class CategoryList(APIView):
     """Список категорій"""

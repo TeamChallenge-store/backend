@@ -25,7 +25,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -86,7 +85,7 @@ WSGI_APPLICATION = 'team_challenge.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'S:;G#V9<H$_onlH?',
         'HOST': '34.116.233.33',

@@ -25,7 +25,7 @@ class ProductDetailView(APIView):
 
         serializer = ProductDetailSerializer(product)
         return Response(serializer.data)
-    
+
 class ProductListViewPriceUp(APIView):
     """Вивід списку продуктів за зростанням ціни"""
     def get(self, request):
@@ -52,7 +52,7 @@ class ProductListViewRate(APIView):
 
     def get(self, request):
         category = request.query_params.get("category", None)
-
+        make_rate()
         sorted_products = sort_rate(category)
 
         return paginate_product_list(sorted_products, request)
