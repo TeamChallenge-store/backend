@@ -167,26 +167,3 @@ class CartView(APIView):
 
             return Response(response_data, status=status.HTTP_200_OK)
 
-    # def delete(self, request, product_id):
-    #     """Видалення товару з корзини"""
-
-    #     try:
-    #         product = Product.objects.get(pk=product_id)
-    #     except Product.DoesNotExist:
-    #         return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    #     # Отримання корзини користувача
-    #     user = request.user
-    #     try:
-    #         cart = Cart.objects.get(user=user)
-    #     except Cart.DoesNotExist:
-    #         return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    #     # Видалення товару з корзини
-    #     try:
-    #         cart_item = CartItem.objects.get(cart=cart, product=product)
-    #         cart_item.delete()
-    #     except CartItem.DoesNotExist:
-    #         return Response({'error': 'Product not found in cart'}, status=status.HTTP_404_NOT_FOUND)
-
-    #     return Response({'success': 'Product removed from cart'}, status=status.HTTP_204_NO_CONTENT)
