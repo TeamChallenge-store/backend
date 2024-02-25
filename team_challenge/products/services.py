@@ -1,3 +1,4 @@
+import random
 from rest_framework.pagination import PageNumberPagination
 from .serializers import ProductListSerializer
 from .models import Product
@@ -43,11 +44,20 @@ def sort_price_down(category):
     return products.order_by("-price")
 
 
-def sort_rate(rate):
+def sort_rate(category):
     """Сортування за рейтингом"""
     products = Product.objects.all()
 
-    if rate is not None:
-        products = products.filter(rate=rate)
+    if category is not None:
+        products = products.filter(category=category)
 
     return products.order_by("-rate")
+
+
+def make_rate():
+    """Випдковий(рандомний) рейтинг для товарів иід 1 до 99"""
+    products = Product.objects.all().filter(rate=0)
+    if products:
+        for product in products:
+            product.rate = random.randint(1, 99)
+            product.save()

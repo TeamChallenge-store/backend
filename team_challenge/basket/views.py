@@ -1,17 +1,10 @@
-from rest_framework import generics
+from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User, AnonymousUser
-from django.contrib.sessions.models import Session
 from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
-from .serializers import (
-    ProductDetailSerializer,
-    CartItemSerializer,
-    CartAnonymousItemSerializer,
-)
-from .services import *
-
+from .serializers import CartItemSerializer, CartAnonymousItemSerializer
+from products.services import *
 
 class CartView(APIView):
     """Операції з корзиною"""
@@ -20,15 +13,13 @@ class CartView(APIView):
         """Додавання товару до корзини"""
 
         # Отримання інформації про товар з запиту
-        product_id = request.data.get("product_id")
-        quantity = request.data.get("quantity", 1)
+        product_id = request.data.get('product_id')
+        quantity = request.data.get('quantity', 1)  
 
         try:
             product = Product.objects.get(pk=product_id)
         except Product.DoesNotExist:
-            return Response(
-                {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
         # Отримання або створення корзини користувача
         user = request.user
@@ -56,14 +47,11 @@ class CartView(APIView):
             return Response(response_data, status=status.HTTP_201_CREATED)
 
         # для зареєстрованого користувача
-        else:    
-
+        else:
             cart, created = Cart.objects.get_or_create(user=user)
 
             # Отримання або створення елемента корзини для вказаного товару
-            cart_item, created = CartItem.objects.get_or_create(
-                cart=cart, product=product
-            )
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
             cart_item.quantity = int(quantity)
             cart_item.save()
 
@@ -71,14 +59,7 @@ class CartView(APIView):
             cart_items = CartItem.objects.filter(cart=cart)
             serializer = CartItemSerializer(cart_items, many=True)
 
-            return Response(
-                {
-                    "cart_items": serializer.data,
-                    "total_items": sum(item.quantity for item in cart_items),
-                },
-                status=status.HTTP_201_CREATED,
-            )
-
+            return Response({'cart_items': serializer.data, 'total_items': cart_items.count()}, status=status.HTTP_201_CREATED)
 
     def patch(self, request):
         """Видалення товару з корзини"""
@@ -103,14 +84,13 @@ class CartView(APIView):
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
             try:
-                cart_item = CartAnonymousItem.objects.get(
-                    cart=cart, product=product
-                )
+                cart_item = CartAnonymousItem.objects.get(cart=cart, product=product)
                 cart_item.delete()
             except CartAnonymousItem.DoesNotExist:
                 return Response(
-                    {"error": "Product not found in cart"}, status=status.HTTP_404_NOT_FOUND
-                )    
+                    {"error": "Product not found in cart"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
             return Response(
                 {"success": "Product removed from cart"},
                 status=status.HTTP_204_NO_CONTENT,
@@ -131,13 +111,14 @@ class CartView(APIView):
                 cart_item.delete()
             except CartItem.DoesNotExist:
                 return Response(
-                    {"error": "Product not found in cart"}, status=status.HTTP_404_NOT_FOUND
+                    {"error": "Product not found in cart"},
+                    status=status.HTTP_404_NOT_FOUND,
                 )
 
             return Response(
-                {"success": "Product removed from cart"}, status=status.HTTP_204_NO_CONTENT
+                {"success": "Product removed from cart"},
+                status=status.HTTP_204_NO_CONTENT,
             )
-        
 
     def get(self, request):
         """Отримання інформації про корзину"""
@@ -149,22 +130,16 @@ class CartView(APIView):
         if type(user) is AnonymousUser:
             if not request.session.session_key:
                 request.session.create()
-                print("create")
             session = request.session
 
             cart, created = CartAnonymous.objects.get_or_create(
                 session_id=session.session_key
             )
-            print('***', cart)
-            # if created:
-            #     print('Create cart anonymous')
-            # UserSession.objects.get_or_create(
-            #     user=user, session_id=request.session.session_key
-            # )
+            
             cart_items = CartAnonymousItem.objects.filter(cart=cart)
             serializer = CartAnonymousItemSerializer(cart_items, many=True)
             response_data = {
-                "message": 'Anonymous',
+                "message": "Anonymous",
                 "session_key": session.session_key,
                 "cart_items": serializer.data,
                 "total_items": sum(item.quantity for item in cart_items),
@@ -175,11 +150,10 @@ class CartView(APIView):
         # Зареєстрований користувач
         else:
             session = request.session
-            cart, created = Cart.objects.get_or_create(user=user)  # session_id=session.session_key,
-            if created:
-                print('Create cart user')
+            cart, created = Cart.objects.get_or_create(user=user)
+            
             # Отримання всіх товарів у корзині
-            cart_items = CartItem.objects.filter(cart=cart)            
+            cart_items = CartItem.objects.filter(cart=cart)
 
             # Серіалізація інформації про товари у корзині
             serializer = CartItemSerializer(cart_items, many=True)
@@ -192,3 +166,27 @@ class CartView(APIView):
             }
 
             return Response(response_data, status=status.HTTP_200_OK)
+
+    # def delete(self, request, product_id):
+    #     """Видалення товару з корзини"""
+
+    #     try:
+    #         product = Product.objects.get(pk=product_id)
+    #     except Product.DoesNotExist:
+    #         return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    #     # Отримання корзини користувача
+    #     user = request.user
+    #     try:
+    #         cart = Cart.objects.get(user=user)
+    #     except Cart.DoesNotExist:
+    #         return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    #     # Видалення товару з корзини
+    #     try:
+    #         cart_item = CartItem.objects.get(cart=cart, product=product)
+    #         cart_item.delete()
+    #     except CartItem.DoesNotExist:
+    #         return Response({'error': 'Product not found in cart'}, status=status.HTTP_404_NOT_FOUND)
+
+    #     return Response({'success': 'Product removed from cart'}, status=status.HTTP_204_NO_CONTENT)
