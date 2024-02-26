@@ -1,5 +1,5 @@
 from django.db import models
-from categories.models import Category
+from categories.models import Category, Subcategory
 
 
 class Brand(models.Model):
@@ -13,8 +13,8 @@ class Brand(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    # category = models.CharField(max_length=255, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(blank=True)
     description = models.TextField(blank=True)

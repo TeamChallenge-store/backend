@@ -1,14 +1,14 @@
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination  # Імпорт пагінації
-from .models import Category
+from rest_framework.pagination import PageNumberPagination  
+from .models import Category, Subcategory
 from .serializers import CategorySerializer
-from products.serializers import ProductListSerializer  # Виправлення імпорту
+from products.serializers import ProductListSerializer  
 from products.models import Product
 
 class CustomPageNumberPagination(PageNumberPagination):
-    """Власний клас пагінації"""
+    """Пагінація"""
     page_size = 12
     page_size_query_param = 'page_size'
     max_page_size = 100
@@ -21,7 +21,7 @@ class CategoryList(APIView):
         return Response(serializer.data)
     
 class CategoryDetail(APIView):
-    """Список підкатегорій та продуктів певної категорії"""
+    """Перехід на певну категорію"""
 
     def get_object(self, pk):
         try:
@@ -43,3 +43,28 @@ class CategoryDetail(APIView):
         response_data = serializer.data
         response_data['products'] = product_serializer.data  # Передаємо дані про продукти
         return paginator.get_paginated_response(response_data)
+
+class SubcategoryDetail(APIView):
+    """Перехід на підкатегорію"""
+
+    def get_object(self, category_pk, subcategory_pk):
+        try:
+            # Отримати об'єкт підкатегорії за ідентифікатором
+            subcategory = Subcategory.objects.get(pk=subcategory_pk, parent_category_id=category_pk)
+            return subcategory
+        except Subcategory.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, subcategory_pk, format=None):
+        # Отримати об'єкт підкатегорії
+        subcategory = self.get_object(pk, subcategory_pk)  # Оновлено, передаємо pk
+
+        # Отримати товари, які належать до цієї підкатегорії
+        products = Product.objects.filter(subcategory=subcategory)
+
+        paginator = CustomPageNumberPagination()
+        paginated_products = paginator.paginate_queryset(products, request)
+
+        # Серіалізація товарів
+        serializer = ProductListSerializer(paginated_products, many=True)
+        return paginator.get_paginated_response(serializer.data)
