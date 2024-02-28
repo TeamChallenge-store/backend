@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,6 +13,23 @@ class CustomPageNumberPagination(PageNumberPagination):
     page_size = 12
     page_size_query_param = 'page_size'
     max_page_size = 100
+
+    def get_paginated_response(self, data):
+        response = super().get_paginated_response(data)
+        response.data['page_size'] = self.page_size
+
+        total_pages = self.page.paginator.num_pages
+        response.data['total_pages'] = total_pages
+
+        response.data = OrderedDict([
+            ('count', response.data['count']),
+            ('page_size', response.data['page_size']),
+            ('total_pages', response.data['total_pages']),
+            ('next', response.data['next']),
+            ('previous', response.data['previous']),
+            ('results', response.data['results']),
+        ])
+        return response
 
 class CategoryList(APIView):
     """Список категорій"""
@@ -29,19 +47,25 @@ class CategoryDetail(APIView):
         except Category.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk=None, format=None):
+    def get(self, request, pk=None, format=None, sort=None):
         category = self.get_object(pk)
         serializer = CategorySerializer(category)
-        products = Product.objects.filter(category=category)
 
-        # Пагінація продуктів
+        if sort == 'price_up':
+            products = Product.objects.filter(category=category).order_by('price')  # Sort by price ascending
+        elif sort == 'price_down':
+            products = Product.objects.filter(category=category).order_by('-price')  # Sort by price descending
+        elif sort == 'rate':
+            products = Product.objects.filter(category=category).order_by('-rate')  # Sort by rating descending
+        else:
+            products = Product.objects.filter(category=category)  # Default sorting
+
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
         product_serializer = ProductListSerializer(paginated_products, many=True)
 
-        # Додаємо дані про категорію та підкатегорії до відповіді
         response_data = serializer.data
-        response_data['products'] = product_serializer.data  # Передаємо дані про продукти
+        response_data['products'] = product_serializer.data
         return paginator.get_paginated_response(response_data)
 
 class SubcategoryDetail(APIView):
@@ -49,22 +73,24 @@ class SubcategoryDetail(APIView):
 
     def get_object(self, category_pk, subcategory_pk):
         try:
-            # Отримати об'єкт підкатегорії за ідентифікатором
             subcategory = Subcategory.objects.get(pk=subcategory_pk, parent_category_id=category_pk)
             return subcategory
         except Subcategory.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, subcategory_pk, format=None):
-        # Отримати об'єкт підкатегорії
-        subcategory = self.get_object(pk, subcategory_pk)  # Оновлено, передаємо pk
-
-        # Отримати товари, які належать до цієї підкатегорії
+    def get(self, request, pk, subcategory_pk, sort=None):
+        subcategory = self.get_object(pk, subcategory_pk)  
         products = Product.objects.filter(subcategory=subcategory)
+
+        if sort == 'price_up':
+            products = Product.objects.filter(subcategory=subcategory).order_by('price')
+        elif sort == 'price_down':
+            products = Product.objects.filter(subcategory=subcategory).order_by('-price')
+        elif sort == 'rate':
+            products = Product.objects.filter(subcategory=subcategory).order_by('-rate')
+
 
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
-
-        # Серіалізація товарів
         serializer = ProductListSerializer(paginated_products, many=True)
         return paginator.get_paginated_response(serializer.data)
