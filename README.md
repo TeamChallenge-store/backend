@@ -9,7 +9,7 @@ $ git clone https://github.com/0leksandrr/team_challenge.git
 ```bash
 $ pip install -r requirements.txt
 ```
-✔️ Apply migrations:
+✔️ Apply migrations: 
 ```bash
 $ python manage.py migrate
 ```
