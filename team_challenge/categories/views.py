@@ -41,14 +41,15 @@ class CategoryList(APIView):
 class CategoryDetail(APIView):
     """Перехід на певну категорію"""
 
-    def get_object(self, pk):
+    def get_object(self, category_slug):
         try:
-            return Category.objects.get(pk=pk)
+            return Category.objects.get(slug=category_slug)
         except Category.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk=None, format=None, sort=None):
-        category = self.get_object(pk)
+    def get(self, request, category_slug=None, format=None):
+        sort = request.GET.get('sort')
+        category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
 
         if sort == 'price_up':
@@ -71,24 +72,25 @@ class CategoryDetail(APIView):
 class SubcategoryDetail(APIView):
     """Перехід на підкатегорію"""
 
-    def get_object(self, category_pk, subcategory_pk):
+    def get_object(self, category_slug, subcategory_slug):
         try:
-            subcategory = Subcategory.objects.get(pk=subcategory_pk, parent_category_id=category_pk)
+            category = Category.objects.get(slug=category_slug)
+            subcategory = Subcategory.objects.get(slug=subcategory_slug, parent_category_id=category)
             return subcategory
-        except Subcategory.DoesNotExist:
+        except (Category.DoesNotExist, Subcategory.DoesNotExist):
             raise Http404
 
-    def get(self, request, pk, subcategory_pk, sort=None):
-        subcategory = self.get_object(pk, subcategory_pk)  
+    def get(self, request, category_slug, subcategory_slug, format=None):
+        sort = request.GET.get('sort')
+        subcategory = self.get_object(category_slug, subcategory_slug)  
         products = Product.objects.filter(subcategory=subcategory)
 
         if sort == 'price_up':
-            products = Product.objects.filter(subcategory=subcategory).order_by('price')
+            products = products.order_by('price')
         elif sort == 'price_down':
-            products = Product.objects.filter(subcategory=subcategory).order_by('-price')
+            products = products.order_by('-price')
         elif sort == 'rate':
-            products = Product.objects.filter(subcategory=subcategory).order_by('-rate')
-
+            products = products.order_by('-rate')
 
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
