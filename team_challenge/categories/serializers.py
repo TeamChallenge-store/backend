@@ -6,7 +6,7 @@ from products.serializers import ProductListSerializer
 class SubcategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Subcategory
-        fields = ('id', 'parent_category_id', 'name', 'image')
+        fields = ('id', 'slug', 'parent_category_id', 'name', 'image')
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubcategorySerializer(source='subcategory_set', many=True)
@@ -14,13 +14,13 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'image', 'subcategories', 'products')
+        fields = ('id', 'slug', 'name', 'image', 'subcategories', 'products')
 
     def get_products(self, instance):
         request = self.context.get('request')
-        if request and hasattr(request, 'resolver_match') and 'pk' in request.resolver_match.kwargs:
-            pk = request.resolver_match.kwargs['pk']
-            category = Category.objects.filter(pk=pk).first()
+        if request and hasattr(request, 'resolver_match') and 'category_slug' in request.resolver_match.kwargs:
+            category_slug = request.resolver_match.kwargs['category_slug']
+            category = Category.objects.filter(slug=category_slug).first()
             if category:
                 products = Product.objects.filter(category=category)
                 serializer = ProductListSerializer(products, many=True)
