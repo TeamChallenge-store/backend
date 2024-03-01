@@ -7,7 +7,7 @@ from .serializers import CartItemSerializer, CartAnonymousItemSerializer
 from products.services import *
 
 class CartView(APIView):
-    """Операції з корзиною"""
+    """Операції з кошиком"""
 
     # def patch(self, request, pk):
     #     """Видалення товару з корзини"""
@@ -169,9 +169,9 @@ class CartView(APIView):
     #             return Response(response_data, status=status.HTTP_201_CREATED)
 
     def get(self, request):
-        """Отримання інформації про корзину"""
+        """Отримання інформації про кошик"""
 
-        # Отримання або створення корзини користувача
+        # Отримання або створення кошика користувача
         user = request.user
 
         # Якщо незареєстрований користувач
@@ -200,13 +200,13 @@ class CartView(APIView):
             session = request.session
             cart, created = Cart.objects.get_or_create(user=user)
 
-            # Отримання всіх товарів у корзині
+            # Отримання всіх товарів у кошику
             cart_items = CartItem.objects.filter(cart=cart)
 
-            # Серіалізація інформації про товари у корзині
+            # Серіалізація інформації про товари у кошику
             serializer = CartItemSerializer(cart_items, many=True)
 
-            # Повернення відповіді з інформацією про товари у корзині
+            # Повернення відповіді з інформацією про товари у кошику
             response_data = {
                 "session_key": request.session.session_key,
                 "cart_items": serializer.data,
@@ -214,7 +214,6 @@ class CartView(APIView):
             }
 
             return Response(response_data, status=status.HTTP_200_OK)
-        
 
     def delete(self, request):
         """Очищення кошика"""
@@ -241,10 +240,10 @@ class CartView(APIView):
 
 
 class CartItemDelete(APIView):
-    """Операції з корзиною"""
+    """Операції з кошиком"""
 
     def patch(self, request, pk):
-        """Видалення товару з корзини"""
+        """Видалення товару з кошика"""
 
         try:
             product = Product.objects.get(pk=pk)
@@ -253,7 +252,7 @@ class CartItemDelete(APIView):
                 {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        # Отримання корзини користувача
+        # Отримання кошика користувача
         user = request.user
 
         # для анонімного користавача
@@ -287,7 +286,7 @@ class CartItemDelete(APIView):
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
 
-            # Видалення товару з корзини
+            # Видалення товару з кошика
             try:
                 cart_item = CartItem.objects.get(cart=cart, product=product)
                 cart_item.delete()
@@ -354,7 +353,7 @@ class CartItemAdded(APIView):
                 cart_item.quantity = quantity
                 cart_item.save()
 
-                # Отримання всіх товарів у корзині та серіалізація їх у відповідь
+                # Отримання всіх товарів у кошику та серіалізація їх у відповідь
                 cart_items = CartAnonymousItem.objects.filter(cart=cart)
                 serializer = CartAnonymousItemSerializer(cart_items, many=True)
                 response_data = {
@@ -370,7 +369,7 @@ class CartItemAdded(APIView):
             cart, created = Cart.objects.get_or_create(user=user)
             session = request.session
 
-            # Отримання або створення елемента корзини для вказаного товару
+            # Отримання або створення елемента кошика для вказаного товару
             cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
             # quantity = int(quantity)
@@ -395,7 +394,7 @@ class CartItemAdded(APIView):
                 cart_item.quantity = quantity
                 cart_item.save()
 
-                # Отримання всіх товарів у корзині та серіалізація їх у відповідь
+                # Отримання всіх товарів у кошику та серіалізація їх у відповідь
                 cart_items = CartItem.objects.filter(cart=cart)
                 serializer = CartItemSerializer(cart_items, many=True)
                 response_data = {
