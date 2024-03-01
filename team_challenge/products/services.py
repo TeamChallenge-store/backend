@@ -1,17 +1,45 @@
+from collections import OrderedDict
 import random
+from requests import Response
 from rest_framework.pagination import PageNumberPagination
 from .serializers import ProductListSerializer
 from .models import Product
 
 def paginate_product_list(products, request):
-    """Пагінація"""
-    paginator = PageNumberPagination()
-    paginator.page_size = 12 
 
-    result_page = paginator.paginate_queryset(products, request)
-    serializer = ProductListSerializer(result_page, many=True)
+    class CustomPageNumberPagination(PageNumberPagination):
+        """Custom pagination class for product list."""
+        page_size = 12
+        page_size_query_param = 'page_size'
+        max_page_size = 100
 
-    return paginator.get_paginated_response(serializer.data)
+        def get_paginated_response(self, data):
+            response = super().get_paginated_response(data)
+            response.data['page_size'] = self.page_size
+
+            # Отримання загальної кількості сторінок
+            total_pages = self.page.paginator.num_pages
+            response.data['total_pages'] = total_pages
+
+            # Переупорядкування полів у відповіді
+            response.data = OrderedDict([
+                ('count', response.data['count']),
+                ('page_size', response.data['page_size']),
+                ('total_pages', response.data['total_pages']),
+                ('next', response.data['next']),
+                ('previous', response.data['previous']),
+                ('results', response.data['results']),
+            ])
+            return response
+
+    paginator = CustomPageNumberPagination()
+    paginated_products = paginator.paginate_queryset(products, request)
+    serializer = ProductListSerializer(paginated_products, many=True)
+
+    # Захоплення пагінованої відповіді
+    paginated_data = paginator.get_paginated_response(serializer.data)
+
+    return paginated_data
 
 def filter_price_products(min_price, max_price):
     """Фільтрація за ціною"""
