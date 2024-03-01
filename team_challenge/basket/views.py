@@ -6,8 +6,27 @@ from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
 from .serializers import CartItemSerializer, CartAnonymousItemSerializer
 from products.services import *
 
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+from drf_yasg import openapi
+
 class CartView(APIView):
     """Операції з корзиною"""
+    
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER)
+            },
+            required=['product_id']
+        ),
+        responses={
+            200: openapi.Response(description='Success'),
+            400: openapi.Response(description='Bad Request'),
+            404: openapi.Response(description='Not Found')
+        }
+    )
 
     def patch(self, request):
         """Видалення товару з корзини"""
@@ -67,6 +86,23 @@ class CartView(APIView):
                 {"success": "Product removed from cart"},
                 status=status.HTTP_204_NO_CONTENT,
             )
+    
+
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                'quantity': openapi.Schema(type=openapi.TYPE_INTEGER)
+            }
+        ),
+        responses={
+            200: openapi.Response(description='Success'),
+            400: openapi.Response(description='Bad Request'),
+            404: openapi.Response(description='Not Found')
+        }
+    )
 
     def post(self, request):
         """Додавання товару до кошика"""
@@ -163,6 +199,13 @@ class CartView(APIView):
 
                 return Response(response_data, status=status.HTTP_201_CREATED)
             
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(description='Success', schema=CartItemSerializer(many=True)),
+            400: openapi.Response(description='Bad Request'),
+            404: openapi.Response(description='Not Found')
+        }
+    )
 
     def get(self, request):
         """Отримання інформації про корзину"""
@@ -211,6 +254,21 @@ class CartView(APIView):
 
             return Response(response_data, status=status.HTTP_200_OK)
 
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER)
+            },
+            required=['product_id']
+        ),
+        responses={
+            200: openapi.Response(description='Success'),
+            400: openapi.Response(description='Bad Request'),
+            404: openapi.Response(description='Not Found')
+        }
+    )
 
     def delete(self, request):
         """Очищення кошика"""
