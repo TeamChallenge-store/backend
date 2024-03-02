@@ -17,3 +17,17 @@ $ python manage.py migrate
 ```bash
 $ python manage.py runserver
 ```
+example .env
+
+SECRET_KEY=
+
+DATABASE_NAME=postgress
+DATABASE_USER=postgress
+DATABASE_PASSWORD=
+DATABASE_HOST=
+DATABASE_PORT=
+
+EMAIL_HOST=
+EMAIL_PORT=
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
