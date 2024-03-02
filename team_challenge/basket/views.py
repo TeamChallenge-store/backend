@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
-from rest_framework.response import  Response as responce
+from rest_framework.response import  Response as rest_response
 from rest_framework import status
 from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
 from .serializers import CartItemSerializer, CartAnonymousItemSerializer
@@ -14,22 +14,15 @@ class CartView(APIView):
     """Операції з кошиком"""
 
     @swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'product_id': openapi.Schema(type=openapi.TYPE_INTEGER)
-            },
-            required=['product_id']
-        ),
         responses={
-            200: openapi.Response(description='Success'),
-            400: openapi.Response(description='Bad Request'),
-            404: openapi.Response(description='Not Found')
+            200: openapi.Response(
+                description="Success", schema=CartItemSerializer(many=True)
+            ),
+            400: openapi.Response(description="Bad Request"),
+            404: openapi.Response(description="Not Found"),
         }
     )
-    
 
-    
     def get(self, request):
         """Отримання інформації про кошик"""
 
@@ -55,7 +48,7 @@ class CartView(APIView):
                 "total_items": sum(item.quantity for item in cart_items),
             }
 
-            return Response(response_data, status=status.HTTP_200_OK)
+            return rest_response(response_data, status=status.HTTP_200_OK)
 
         # Зареєстрований користувач
         else:
@@ -75,7 +68,7 @@ class CartView(APIView):
                 "total_items": sum(item.quantity for item in cart_items),
             }
 
-            return Response(response_data, status=status.HTTP_200_OK)
+            return rest_response(response_data, status=status.HTTP_200_OK)
 
     def delete(self, request):
         """Очищення кошика"""
@@ -88,7 +81,9 @@ class CartView(APIView):
             try:
                 cart = CartAnonymous.objects.get(session=session.session_key)
             except CartAnonymous.DoesNotExist:
-                return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+                return rest_response(
+                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
+                )
             cart.delete()
 
         else:
@@ -98,11 +93,26 @@ class CartView(APIView):
                 return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
             cart.delete()
 
-        return Response({'success': 'Cart delete'}, status=status.HTTP_204_NO_CONTENT)
+        return rest_response(
+            {"success": "Cart delete"}, status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class CartItemDelete(APIView):
     """Операції з кошиком"""
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={"product_id": openapi.Schema(type=openapi.TYPE_INTEGER)},
+            required=["product_id"],
+        ),
+        responses={
+            200: openapi.Response(description="Success"),
+            400: openapi.Response(description="Bad Request"),
+            404: openapi.Response(description="Not Found"),
+        },
+    )
 
     def patch(self, request, pk):
         """Видалення товару з кошика"""
@@ -110,7 +120,7 @@ class CartItemDelete(APIView):
         try:
             product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
-            return Response(
+            return rest_response(
                 {"error": "Product not found"}, status.HTTP_404_NOT_FOUND
             )
 
@@ -123,18 +133,18 @@ class CartItemDelete(APIView):
             try:
                 cart = CartAnonymous.objects.get(session=session.session_key)
             except CartAnonymous.DoesNotExist:
-                return Response(
+                return rest_response(
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
             try:
                 cart_item = CartAnonymousItem.objects.get(cart=cart, product=product)
                 cart_item.delete()
             except CartAnonymousItem.DoesNotExist:
-                return Response(
+                return rest_response(
                     {"error": "Product not found in cart"},
                     status=status.HTTP_404_NOT_FOUND,
                 )
-            return Response(
+            return rest_response(
                 {"success": "Product removed from cart"},
                 status=status.HTTP_204_NO_CONTENT,
             )
@@ -144,7 +154,7 @@ class CartItemDelete(APIView):
             try:
                 cart = Cart.objects.get(user=user)
             except Cart.DoesNotExist:
-                return Response(
+                return rest_response(
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
 
@@ -153,49 +163,46 @@ class CartItemDelete(APIView):
                 cart_item = CartItem.objects.get(cart=cart, product=product)
                 cart_item.delete()
             except CartItem.DoesNotExist:
-                return Response(
+                return rest_response(
                     {"error": "Product not found in cart"},
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            return Response(
+            return rest_response(
                 {"success": "Product removed from cart"},
                 status=status.HTTP_204_NO_CONTENT,
             )
-    
-
-
-    
 
 
 class CartItemAdded(APIView):
     """Операції з корзиною"""
+
     @swagger_auto_schema(
-            request_body=openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'product_id': openapi.Schema(type=openapi.TYPE_INTEGER),
-                    'quantity': openapi.Schema(type=openapi.TYPE_INTEGER)
-                }
-            ),
-            responses={
-                200: openapi.Response(description='Success'),
-                400: openapi.Response(description='Bad Request'),
-                404: openapi.Response(description='Not Found')
-            }
-        )
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "product_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+                "quantity": openapi.Schema(type=openapi.TYPE_INTEGER),
+            },
+        ),
+        responses={
+            200: openapi.Response(description="Success"),
+            400: openapi.Response(description="Bad Request"),
+            404: openapi.Response(description="Not Found"),
+        },
+    )
+
     def post(self, request, pk, quantity):
         """Додавання товару до кошика"""
 
-        # Отримання інформації про товар з запиту
-        # product_id = request.data.get('product_id')
-        # quantity = request.data.get('quantity', 1)
+        # Отримання інформації про товар
 
         try:
-            # product = Product.objects.get(pk=product_id)
             product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
-            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+            return rest_response(
+                {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
+            )
 
         # Отримання або створення кошика користувача
         user = request.user
@@ -208,8 +215,6 @@ class CartItemAdded(APIView):
             cart_item, created = CartAnonymousItem.objects.get_or_create(
                     cart=cart, product=product
                 )
-
-            # quantity = int(quantity)
 
             # видалення товару з кошика, якщо кількість = 0
 
@@ -225,7 +230,9 @@ class CartItemAdded(APIView):
                     "total_items": sum(item.quantity for item in cart_items),
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED) # status???
+                return rest_response(
+                    response_data, status=status.HTTP_201_CREATED
+                )  # status???
 
             # додавання товару до кошика, якщо кількість != 0
             else:
@@ -241,7 +248,7 @@ class CartItemAdded(APIView):
                         "total_items": sum(item.quantity for item in cart_items),
                     }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                return rest_response(response_data, status=status.HTTP_201_CREATED)
 
         # для зареєстрованого користувача
         else:
@@ -266,7 +273,9 @@ class CartItemAdded(APIView):
                         "total_items": sum(item.quantity for item in cart_items),
                     }
 
-                return Response(response_data, status=status.HTTP_201_CREATED) # status???
+                return rest_response(
+                    response_data, status=status.HTTP_201_CREATED
+                )  # status???
 
             # додавання товару до кошика, якщо кількість != 0
             else:
@@ -282,5 +291,4 @@ class CartItemAdded(APIView):
                         "total_items": sum(item.quantity for item in cart_items),
                     }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
-            
+                return rest_response(response_data, status=status.HTTP_201_CREATED)
