@@ -7,7 +7,9 @@ from .models import Category, Subcategory
 from .serializers import CategorySerializer
 from products.serializers import ProductListSerializer  
 from products.models import Product
-
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from .serializers import CategorySerializer, SubcategorySerializer
 class CustomPageNumberPagination(PageNumberPagination):
     """Пагінація"""
     page_size = 12
@@ -33,6 +35,13 @@ class CustomPageNumberPagination(PageNumberPagination):
 
 class CategoryList(APIView):
     """Список категорій"""
+
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(description='Success'),
+        }
+    )
+
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
@@ -46,6 +55,12 @@ class CategoryDetail(APIView):
             return Category.objects.get(slug=category_slug)
         except Category.DoesNotExist:
             raise Http404
+        
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(description='Success', schema=CategorySerializer),
+        }
+    )
 
     def get(self, request, category_slug=None, format=None):
         sort = request.GET.get('sort')
@@ -80,6 +95,12 @@ class SubcategoryDetail(APIView):
         except (Category.DoesNotExist, Subcategory.DoesNotExist):
             raise Http404
 
+    @swagger_auto_schema(
+        responses={
+            200: openapi.Response(description='Success', schema=SubcategorySerializer),
+        }
+    )
+    
     def get(self, request, category_slug, subcategory_slug, format=None):
         sort = request.GET.get('sort')
         subcategory = self.get_object(category_slug, subcategory_slug)  
