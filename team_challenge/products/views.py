@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.response import Response as responce
 from rest_framework import status
 from .models import Product
 from .serializers import ProductDetailSerializer
@@ -47,7 +47,7 @@ class ProductDetailView(APIView):
         try:
             product = Product.objects.get(pk=product_id)
             serializer = ProductDetailSerializer(product)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return responce(serializer.data, status=status.HTTP_200_OK)
         except Product.DoesNotExist:
-            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+            return responce({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 

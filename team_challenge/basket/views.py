@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework.response import  Response as responce
 from rest_framework import status
 from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
 from .serializers import CartItemSerializer, CartAnonymousItemSerializer
@@ -35,7 +35,7 @@ class CartView(APIView):
             product = Product.objects.get(pk=product_id)
         except Product.DoesNotExist:
             return Response(
-                {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Product not found"}, status.HTTP_404_NOT_FOUND
             )
 
         # Отримання корзини користувача
@@ -232,7 +232,7 @@ class CartView(APIView):
                 "total_items": sum(item.quantity for item in cart_items),
             }
 
-            return Response(response_data, status=status.HTTP_200_OK)
+            return responce(response_data, status.HTTP_200_OK)
 
         # Зареєстрований користувач
         else:
@@ -252,7 +252,7 @@ class CartView(APIView):
                 "total_items": sum(item.quantity for item in cart_items),
             }
 
-            return Response(response_data, status=status.HTTP_200_OK)
+            return responce(response_data, status=status.HTTP_200_OK)
 
 
     @swagger_auto_schema(
