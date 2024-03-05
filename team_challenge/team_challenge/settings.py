@@ -8,32 +8,24 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# env = environ.Env()
-# environ.Env.read_env(BASE_DIR / ".env")
-
-# BASE_DIR = Path(__file__).resolve().parent.parent
-
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
     str(BASE_DIR) + "/teamchallenge-2105a95396e0.json"
 )
+
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getenv(
+#     "GOOGLE_APPLICATION_CREDENTIALS"
+# )
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm'
-
-SECRET_KEY = os.getenv("SECRET_KEY")
-
-
-# SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm'
+# SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
-
-# DEBUG = True
-
-# DEBUG = os.getenv('DEBUG')
+# DEBUG = os.getenv("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -95,28 +87,28 @@ WSGI_APPLICATION = 'team_challenge.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'S:;G#V9<H$_onlH?',
-#         'HOST': '34.116.233.33',
-#         'PORT': '5432',
-#     }
-# }
-
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("DATABASE_NAME"),
-        "USER": os.getenv("DATABASE_USER"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD"),
-        "HOST": os.getenv("DATABASE_HOST"),
-        "PORT": os.getenv("DATABASE_PORT"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'S:;G#V9<H$_onlH?',
+        'HOST': '34.116.233.33',
+        'PORT': '5432',
     }
 }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": os.getenv("DATABASE_NAME"),
+#         "USER": os.getenv("DATABASE_USER"),
+#         "PASSWORD": os.getenv("DATABASE_PASSWORD"),
+#         "HOST": os.getenv("DATABASE_HOST"),
+#         "PORT": os.getenv("DATABASE_PORT"),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
