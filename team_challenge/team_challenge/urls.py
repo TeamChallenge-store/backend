@@ -21,16 +21,18 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-   
-    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/v1/', include('basket.urls'), name='basket'),
-    path('api/v1/', include('products.urls'), name='products'),
-    path('api/v1/', include('categories.urls'), name='categories'),
-
+    path(
+        "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
+    ),
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls")),
+    path("api/v1/", include("basket.urls"), name="basket"),
+    path("api/v1/", include("products.urls"), name="products"),
+    path("api/v1/", include("categories.urls"), name="categories"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
