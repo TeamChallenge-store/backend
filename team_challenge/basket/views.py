@@ -34,7 +34,7 @@ class CartView(APIView):
         try:
             product = Product.objects.get(pk=product_id)
         except Product.DoesNotExist:
-            return Response(
+            return responce(
                 {"error": "Product not found"}, status.HTTP_404_NOT_FOUND
             )
 
@@ -47,7 +47,7 @@ class CartView(APIView):
             try:
                 cart = CartAnonymous.objects.get(session=session.session_key)
             except CartAnonymous.DoesNotExist:
-                return Response(
+                return responce(
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
             try:
@@ -68,7 +68,7 @@ class CartView(APIView):
             try:
                 cart = Cart.objects.get(user=user)
             except Cart.DoesNotExist:
-                return Response(
+                return responce(
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
 
@@ -77,12 +77,12 @@ class CartView(APIView):
                 cart_item = CartItem.objects.get(cart=cart, product=product)
                 cart_item.delete()
             except CartItem.DoesNotExist:
-                return Response(
+                return responce(
                     {"error": "Product not found in cart"},
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-            return Response(
+            return responce(
                 {"success": "Product removed from cart"},
                 status=status.HTTP_204_NO_CONTENT,
             )
@@ -143,7 +143,7 @@ class CartView(APIView):
                     "total_items": sum(item.quantity for item in cart_items),
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED) # status???
+                return responce(response_data, status=status.HTTP_201_CREATED) # status???
 
             # додавання товару до кошика, якщо кількість != 0
             else:
@@ -159,7 +159,7 @@ class CartView(APIView):
                     "total_items": sum(item.quantity for item in cart_items),
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                return responce(response_data, status=status.HTTP_201_CREATED)
 
         # для зареєстрованого користувача
         else:
@@ -181,7 +181,7 @@ class CartView(APIView):
                     "total_items": sum(item.quantity for item in cart_items),
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED) # status???
+                return responce(response_data, status=status.HTTP_201_CREATED) # status???
 
             # додавання товару до кошика, якщо кількість != 0
             else:
@@ -197,7 +197,7 @@ class CartView(APIView):
                     "total_items": sum(item.quantity for item in cart_items),
                 }
 
-                return Response(response_data, status=status.HTTP_201_CREATED)
+                return responce(response_data, status=status.HTTP_201_CREATED)
             
     @swagger_auto_schema(
         responses={
@@ -281,15 +281,15 @@ class CartView(APIView):
             try:
                 cart = CartAnonymous.objects.get(session=session.session_key)
             except CartAnonymous.DoesNotExist:
-                return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+                return responce({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
             cart.delete()
 
         else:
             try:
                 cart = Cart.objects.get(user=user)
             except Cart.DoesNotExist:
-                return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+                return responce({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
             cart.delete()
 
-        return Response({'success': 'Cart delete'}, status=status.HTTP_204_NO_CONTENT)
+        return responce({'success': 'Cart delete'}, status=status.HTTP_204_NO_CONTENT)
 
