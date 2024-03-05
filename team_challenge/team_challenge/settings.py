@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,24 +12,12 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
     str(BASE_DIR) + "/teamchallenge-2105a95396e0.json"
 )
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm'
-
-# SECRET_KEY = os.getenv('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# DEBUG = os.getenv('DEBUG')
-
-ALLOWED_HOSTS = ['*']
+DEBUG = os.getenv('DEBUG')
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'basket',
     'products',
@@ -84,12 +75,12 @@ WSGI_APPLICATION = 'team_challenge.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'S:;G#V9<H$_onlH?',
-        'HOST': '34.116.233.33',
-        'PORT': '5432',
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
     }
 }
 
@@ -140,3 +131,4 @@ DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'teamchallenge_backend' 
 
 CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = ['*']

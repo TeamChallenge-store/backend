@@ -10,6 +10,8 @@ from products.models import Product
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .serializers import CategorySerializer, SubcategorySerializer
+from rest_framework import filters
+from django.db.models import Q
 class CustomPageNumberPagination(PageNumberPagination):
     """Пагінація"""
     page_size = 12
@@ -67,15 +69,21 @@ class CategoryDetail(APIView):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
 
-        if sort == 'price_up':
-            products = Product.objects.filter(category=category).order_by('price')  # Sort by price ascending
-        elif sort == 'price_down':
-            products = Product.objects.filter(category=category).order_by('-price')  # Sort by price descending
-        elif sort == 'rate':
-            products = Product.objects.filter(category=category).order_by('-rate')  # Sort by rating descending
-        else:
-            products = Product.objects.filter(category=category)  # Default sorting
+        search_query = request.query_params.get('search', None)
+        products = Product.objects.filter()
 
+        if search_query:
+            products = products.filter(Q(name__icontains=search_query) | Q(brand__name__icontains=search_query))
+
+        # Сортування
+        if sort == 'price_up':
+            products = products.order_by('price')  
+        elif sort == 'price_down':
+            products = products.order_by('-price') 
+        elif sort == 'rate':
+            products = products.order_by('-rate')  
+            
+        # Пагінація
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
         product_serializer = ProductListSerializer(paginated_products, many=True)
@@ -94,7 +102,7 @@ class SubcategoryDetail(APIView):
             return subcategory
         except (Category.DoesNotExist, Subcategory.DoesNotExist):
             raise Http404
-
+        
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success', schema=SubcategorySerializer),
@@ -105,6 +113,12 @@ class SubcategoryDetail(APIView):
         sort = request.GET.get('sort')
         subcategory = self.get_object(category_slug, subcategory_slug)  
         products = Product.objects.filter(subcategory=subcategory)
+
+        search_query = request.query_params.get('search', None)
+        products = Product.objects.filter()
+
+        if search_query:
+            products = products.filter(Q(name__icontains=search_query) | Q(brand__name__icontains=search_query))
 
         if sort == 'price_up':
             products = products.order_by('price')
