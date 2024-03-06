@@ -70,10 +70,19 @@ class CategoryDetail(APIView):
         serializer = CategorySerializer(category)
 
         search_query = request.query_params.get('search', None)
-        products = Product.objects.filter()
+        products = Product.objects.filter(category=category)
 
         if search_query:
             products = products.filter(Q(name__icontains=search_query) | Q(brand__name__icontains=search_query))
+
+        # Фільтрація за ціною
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+
+        if min_price is not None:
+            products = products.filter(price__gte=min_price)
+        if max_price is not None:
+            products = products.filter(price__lte=max_price)
 
         # Сортування
         if sort == 'price_up':
@@ -115,10 +124,19 @@ class SubcategoryDetail(APIView):
         products = Product.objects.filter(subcategory=subcategory)
 
         search_query = request.query_params.get('search', None)
-        products = Product.objects.filter()
+
 
         if search_query:
             products = products.filter(Q(name__icontains=search_query) | Q(brand__name__icontains=search_query))
+
+        # Фільтрація за ціною
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+
+        if min_price is not None:
+            products = products.filter(price__gte=min_price)
+        if max_price is not None:
+            products = products.filter(price__lte=max_price)
 
         if sort == 'price_up':
             products = products.order_by('price')
