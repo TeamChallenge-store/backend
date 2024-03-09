@@ -1,0 +1,37 @@
+{
+  "SECRET_KEY": {
+    "description": "Secret key",
+    "type": "string",
+    "default": ""
+  },
+  "DEBUG": {
+    "description": "Debug mode",
+    "type": "bool",
+    "default": "True"
+  },
+  "DB_NAME": {
+    "description": "Database name",
+    "type": "string",
+    "default": ""
+  },
+  "DB_USER": {
+    "description": "Database user",
+    "type": "string",
+    "default": ""
+  },
+  "DB_PASSWORD": {
+    "description": "Database password",
+    "type": "string",
+    "default": ""
+  },
+  "DB_HOST": {
+    "description": "Database host",
+    "type": "string",
+    "default": ""
+  },
+  "DB_PORT": {
+    "description": "Database port",
+    "type": "string",
+    "default": ""
+  }
+}
