@@ -1,37 +1,37 @@
 {
-  "SECRET_KEY": {
-    "description": "Secret key",
-    "type": "string",
-    "default": ""
-  },
-  "DEBUG": {
-    "description": "Debug mode",
-    "type": "bool",
-    "default": "True"
-  },
-  "DB_NAME": {
-    "description": "Database name",
-    "type": "string",
-    "default": ""
-  },
-  "DB_USER": {
-    "description": "Database user",
-    "type": "string",
-    "default": ""
-  },
-  "DB_PASSWORD": {
-    "description": "Database password",
-    "type": "string",
-    "default": ""
-  },
-  "DB_HOST": {
-    "description": "Database host",
-    "type": "string",
-    "default": ""
-  },
-  "DB_PORT": {
-    "description": "Database port",
-    "type": "string",
-    "default": ""
-  }
+    "SECRET_KEY": {
+        "description": "Secret key",
+        "type": "string",
+        "default": "django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm"
+    },
+    "DEBUG": {
+        "description": "Debug mode",
+        "type": "bool",
+        "default": true
+    },
+    "DB_NAME": {
+        "description": "Database name",
+        "type": "string",
+        "default": "postgres"
+    },
+    "DB_USER": {
+        "description": "Database user",
+        "type": "string",
+        "default": "postgres"
+    },
+    "DB_PASSWORD": {
+        "description": "Database password",
+        "type": "string",
+        "default": "S:;G#V9<H$_onlH?"
+    },
+    "DB_HOST": {
+        "description": "Database host",
+        "type": "string",
+        "default": "34.116.233.33"
+    },
+    "DB_PORT": {
+        "description": "Database port",
+        "type": "integer",
+        "default": 5432
+    }
 }
