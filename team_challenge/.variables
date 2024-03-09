@@ -7,7 +7,7 @@
   "DEBUG": {
     "description": "Debug mode",
     "type": "bool",
-    "default": "True"
+    "default": ""
   },
   "DB_NAME": {
     "description": "Database name",
