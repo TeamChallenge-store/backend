@@ -34,7 +34,7 @@ def paginate_product_list(products, request):
 
     paginator = CustomPageNumberPagination()
     paginated_products = paginator.paginate_queryset(products, request)
-    serializer = ProductListSerializer(paginated_products, many=True)
+    serializer = ProductListSerializer(paginated_products, many=True, context={'request': request})
 
     # Захоплення пагінованої відповіді
     paginated_data = paginator.get_paginated_response(serializer.data)
