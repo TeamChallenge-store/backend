@@ -106,7 +106,7 @@ class SubcategoryDetail(APIView):
         paginated_products = paginator.paginate_queryset(products, request)
         
         # Serialization
-        serialized_products = ProductListSerializer(paginated_products, many=True)
+        serialized_products = ProductListSerializer(paginated_products, many=True, context={'request': request})
 
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
