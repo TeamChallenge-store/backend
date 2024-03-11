@@ -1,7 +1,7 @@
-[![Django CI](https://github.com/TeamChallenge-store/backend/actions/workflows/django.yml/badge.svg)](https://github.com/TeamChallenge-store/backend/actions/workflows/django.yml)
+ [![Django CI](https://github.com/TeamChallenge-store/backend/actions/workflows/django.yml/badge.svg)](https://github.com/TeamChallenge-store/backend/actions/workflows/django.yml)
 # Installation
-
-✔️ Install dependencies:
+ 
+✔️ Install dependencies:     
 ```bash
 $ git clone https://github.com/0leksandrr/team_challenge.git 
 ```
