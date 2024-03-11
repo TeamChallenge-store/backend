@@ -2,9 +2,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,12 +9,32 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
     str(BASE_DIR) + "/teamchallenge-2105a95396e0.json"
 )
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+# Load environment variables from .env file
+load_dotenv()
 
+# Define the path to the production environment file
+PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
+
+# Check if the production environment file exists
+if PRODUCTION_ENV_FILE.exists():
+    # Load environment variables from .env_production if it exists
+    load_dotenv(dotenv_path=PRODUCTION_ENV_FILE)
+
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
 
+DATABASES = {
+    'default': {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+    }
+}
 
-# Application definition
 INSTALLED_APPS = [
     'basket',
     'products',
@@ -71,24 +88,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'team_challenge.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -118,8 +117,6 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
