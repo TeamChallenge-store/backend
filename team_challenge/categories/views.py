@@ -12,6 +12,7 @@ from .models import Category, Subcategory
 from .serializers import CategorySerializer
 from .services import CustomPageNumberPagination, filter_products, sort_products
 from .serializers import CategorySerializer, SubcategorySerializer
+from .filters import ProductFilter
 
 
 class CategoryList(APIView):
@@ -46,16 +47,17 @@ class CategoryDetail(APIView):
     def get(self, request, category_slug=None, format=None):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
-        
-        # Sorting and filtration
-        search_query = request.query_params.get('search', None)
-        min_price = request.query_params.get('min_price')
-        max_price = request.query_params.get('max_price')
-        sort_option = request.query_params.get('sort')
-
         products = Product.objects.filter(category=category)
-        products = filter_products(products, search_query=search_query, min_price=min_price, max_price=max_price)
+        
+        # Sorting and search
+        search_query = request.query_params.get('search', None)
+        sort_option = request.query_params.get('sort')
+        products = filter_products(products, search_query=search_query)
         products = sort_products(products, sort_option)
+        
+        # Fileter
+        product_filter = ProductFilter(request.query_params, queryset=products)
+        products = product_filter.qs
         
         # Pagination
         paginator = CustomPageNumberPagination()
@@ -90,16 +92,17 @@ class SubcategoryDetail(APIView):
     
     def get(self, request, category_slug, subcategory_slug, format=None):
         subcategory = self.get_object(category_slug, subcategory_slug)  
-
-        # Sorting and filtration
-        search_query = request.query_params.get('search', None)
-        min_price = request.query_params.get('min_price')
-        max_price = request.query_params.get('max_price')
-        sort_option = request.query_params.get('sort')
-
         products = Product.objects.filter(subcategory=subcategory)
-        products = filter_products(products, search_query=search_query, min_price=min_price, max_price=max_price)
+
+        # Sorting and search
+        search_query = request.query_params.get('search', None)
+        sort_option = request.query_params.get('sort')
+        products = filter_products(products, search_query=search_query)
         products = sort_products(products, sort_option)
+        
+        # Fileter
+        product_filter = ProductFilter(request.query_params, queryset=products)
+        products = product_filter.qs
         
         # Pagination
         paginator = CustomPageNumberPagination()
@@ -108,6 +111,7 @@ class SubcategoryDetail(APIView):
         # Serialization
         serialized_products = ProductListSerializer(paginated_products, many=True, context={'request': request})
 
+        # Answer to the request
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
         return paginator.get_paginated_response(serialized_products.data)

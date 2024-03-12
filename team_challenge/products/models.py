@@ -21,6 +21,7 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, blank=True, on_delete=models.CASCADE)
     quantity_in_stock = models.IntegerField()
     rate = models.IntegerField(default=0)
+    color = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return self.name
