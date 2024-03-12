@@ -25,17 +25,11 @@ class CustomPageNumberPagination(PageNumberPagination):
         ])
         return response
 
-def filter_products(products, search_query=None, min_price=None, max_price=None):
-    """Фільтрація за ціною та пошук продуктів"""
+def filter_products(products, search_query=None):
+    """Пошук продуктів"""
 
     if search_query:
         products = products.filter(Q(name__icontains=search_query) | Q(brand__name__icontains=search_query))
-
-    if min_price is not None:
-        products = products.filter(price__gte=min_price)
-    if max_price is not None:
-        products = products.filter(price__lte=max_price)
-
     return products
 
 def sort_products(products, sort_option):

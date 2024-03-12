@@ -1,12 +1,18 @@
 from rest_framework import serializers
 from .models import Product, Brand
 
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = ['name']
+
 class ProductListSerializer(serializers.ModelSerializer):
+    brand = serializers.StringRelatedField(source='brand.name')  
     _links = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ['id', 'category', 'subcategory', 'name', 'price', 'image', '_links']
+        fields = ['id', 'category', 'subcategory', 'name', 'price', 'image', 'brand', 'color', 'rate', '_links']
 
     def get__links(self, obj):
         request = self.context.get('request')
@@ -26,7 +32,3 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-class BrandSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Brand
-        fields = "__all__"
