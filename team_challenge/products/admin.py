@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Brand
+from .models import Brand, Color
 
 # Register your models here.
 admin.site.register(Brand)
+admin.site.register(Color)
