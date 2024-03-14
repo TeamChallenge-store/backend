@@ -16,15 +16,9 @@ services:
       - "80:80"
     depends_on:
       - django
+    networks:
+      - monitoring
 
- networks:
-  monitoring:
-    driver: bridge
-
-volumes:
-  prometheus_data: {}
-
-services:
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
@@ -60,6 +54,7 @@ services:
       - 9090
     networks:
       - monitoring
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -70,4 +65,10 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
     networks:
       - monitoring
-      
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data: {}
