@@ -11,8 +11,4 @@ scrape_configs:
     static_configs:
       - targets: ['node-exporter:9100']
 
-remote_write:
-  - url: http://34.78.48.115:9090
-    basic_auth:
-      username: admin
-      password: password
+
