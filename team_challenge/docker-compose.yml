@@ -1,4 +1,4 @@
-version: '3.7'
+ version: '3
 
 services:
   django:
@@ -28,9 +28,9 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
-      - django
+      - cadvisor
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor
+    image: google/cadvisor:latest
     container_name: cadvisor
     ports:
       - 8081:8081
@@ -39,7 +39,6 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-
   pushgateway:
     image: prom/pushgateway
     container_name: pushgateway
@@ -57,7 +56,7 @@ services:
     ports:
       - 3000:3000
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=PASSWORD
+      - GF_SECURITY_ADMIN_PASSWORD=password
     depends_on:
       - prometheus
       - cadvisor
