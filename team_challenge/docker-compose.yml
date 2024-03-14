@@ -29,11 +29,6 @@ services:
     depends_on:
       -  node-exporter
   
-  pushgateway:
-    image: prom/pushgateway
-    container_name: pushgateway
-    ports:
-      - 9091:9091
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
