@@ -1,18 +1,7 @@
-global:
-  scrape_interval: 1m
-
 scrape_configs:
-  - job_name: 'prometheus'
-    scrape_interval: 1m
+  - job_name: prometheus
+    scrape_interval: 5s
     static_configs:
-      - targets: ['localhost:9090']
-
-  - job_name: 'node'
-    static_configs:
-      - targets: ['node-exporter:9100']
-
-remote_write:
-  - url: "http://grafana:3000/api/prom/push"
-    basic_auth:
-      username: admin
-      password: password
+    - targets:
+      - prometheus:9090
+      - node-exporter:9100
