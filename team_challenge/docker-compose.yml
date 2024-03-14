@@ -27,7 +27,7 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
-      - cadvisor
+      -  node-exporter
   
   pushgateway:
     image: prom/pushgateway
