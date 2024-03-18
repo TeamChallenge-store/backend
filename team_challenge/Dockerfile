@@ -1,20 +1,26 @@
 FROM python:3.12.1-alpine
 
-RUN pip install --upgrade pip
+# Оновлення pip
+RUN pip install poetry==1.7.1
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-RUN mkdir /venv
-
-RUN python -m venv /venv
-ENV PATH="/venv/bin:$PATH"
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
 
 COPY . /backend
-
 WORKDIR /backend
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev \
-    && pip install --no-cache-dir -r requirements.txt
 
+COPY pyproject.toml poetry.lock ./
+RUN touch README.md
+
+RUN poetry install && rm -rf $POETRY_CACHE_DIR
+
+ENV VIRTUAL_ENV=/backend/.venv \
+    PATH="/backend/.venv/bin:$PATH"
+
+# Копіювання скрипту точки входу
 COPY ./entrypoint.sh /
+
+# Виконання скрипту точки входу як команди за замовчуванням
 ENTRYPOINT ["sh", "/entrypoint.sh"]
