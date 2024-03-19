@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'storages',
     'corsheaders',
+    'import_export',
 ]
 
 REST_FRAMEWORK = {
