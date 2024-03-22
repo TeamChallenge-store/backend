@@ -19,8 +19,10 @@ services:
 
   postgres:
     image: postgres:latest
-    env_file:
-      - ./.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: S:;G#V9<H$_onlH?
+      POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data  
     ports:
