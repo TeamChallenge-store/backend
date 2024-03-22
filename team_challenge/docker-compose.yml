@@ -16,7 +16,13 @@ services:
       - "80:80"
     depends_on:
       - django
-    
+
+  postgres:
+    image: postgres:latest
+    env_file:
+      - ./.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  
 
   prometheus:
     image: prom/prometheus:latest
@@ -36,13 +42,17 @@ services:
     restart: unless-stopped
     expose:
       - 9100
+
   grafana:
     image: grafana/grafana
     container_name: grafana
     ports:
       - 3000:3000
     environment:
+      - GF_SECURITY_ADMIN_USER=owner
       - GF_SECURITY_ADMIN_PASSWORD=password
     depends_on:
       - prometheus
 
+volumes:
+  postgres_data:  

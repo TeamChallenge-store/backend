@@ -19,8 +19,6 @@ RUN poetry install && rm -rf $POETRY_CACHE_DIR
 ENV VIRTUAL_ENV=/backend/.venv \
     PATH="/backend/.venv/bin:$PATH"
 
-# Копіювання скрипту точки входу
 COPY ./entrypoint.sh /
 
-# Виконання скрипту точки входу як команди за замовчуванням
 ENTRYPOINT ["sh", "/entrypoint.sh"]

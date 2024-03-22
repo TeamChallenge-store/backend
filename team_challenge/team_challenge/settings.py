@@ -5,10 +5,6 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
-    str(BASE_DIR) + "/teamchallenge-2105a95396e0.json"
-)
-
 # Load environment variables from .env file
 load_dotenv()
 
@@ -129,9 +125,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ 
+# DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# MEDIA_URL = '/media/'  # URL-префікс для медіафайлів
+# MEDIA_ROOT = BASE_DIR / 'media'  # Локальний каталог для зберігання медіафайлів
 
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'teamchallenge_backend' 
 
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
