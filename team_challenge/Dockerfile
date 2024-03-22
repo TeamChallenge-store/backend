@@ -1,6 +1,6 @@
 FROM python:3.12.1-alpine
 
-# Оновлення pip
+
 RUN pip install poetry==1.7.1
 
 ENV POETRY_NO_INTERACTION=1 \
