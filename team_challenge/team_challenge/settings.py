@@ -5,6 +5,17 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+cert_file_path = BASE_DIR / "rest_test.json"
+
+# Перевіряємо наявність файлу з сертифікатом
+if cert_file_path.exists():
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(cert_file_path)
+else:
+    # Використовуємо сертифікат за замовчуванням
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
+        str(BASE_DIR) + "/rest.json"
+    )
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -126,9 +137,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
  
-# DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-# MEDIA_URL = '/media/'  # URL-префікс для медіафайлів
-# MEDIA_ROOT = BASE_DIR / 'media'  # Локальний каталог для зберігання медіафайлів
+DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'oleksandr'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
