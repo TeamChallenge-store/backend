@@ -6,7 +6,7 @@
 $ git clone https://github.com/0leksandrr/team_challenge.git 
 ```
 ✔️ Install dependencies:
-```bash 
+```bash
 $ pip install -r requirements.txt
 ```
 ✔️ Apply migrations: 
