@@ -47,5 +47,4 @@ services:
     depends_on:
       - prometheus
 
-volumes:
-  postgres_data:  
+
