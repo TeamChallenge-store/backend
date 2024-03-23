@@ -5,7 +5,7 @@
 ```bash
 $ git clone https://github.com/0leksandrr/team_challenge.git 
 ```
-✔️ Install dependencies: 
+✔️ Install dependencies:
 ```bash
 $ pip install -r requirements.txt
 ```
