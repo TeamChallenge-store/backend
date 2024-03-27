@@ -35,4 +35,5 @@ urlpatterns = [
     path("api/v1/", include("basket.urls"), name="basket"),
     path("api/v1/", include("products.urls"), name="products"),
     path("api/v1/", include("categories.urls"), name="categories"),
+    path("api/v1/", include("orders.urls"), name="orders"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

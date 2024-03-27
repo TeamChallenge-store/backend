@@ -16,9 +16,6 @@ else:
         str(BASE_DIR) + "/rest.json"
     )
 
-# Load environment variables from .env file
-load_dotenv()
-
 # Define the path to the production environment file
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 
@@ -26,19 +23,30 @@ PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 if PRODUCTION_ENV_FILE.exists():
     # Load environment variables from .env_production if it exists
     load_dotenv(dotenv_path=PRODUCTION_ENV_FILE)
+    
+else:
+    # Load environment variables from .env file
+    load_dotenv()
 
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
 
+# DATABASES = {
+#     'default': {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": os.getenv("DB_NAME"),
+#         "USER": os.getenv("DB_USER"),
+#         "PASSWORD": os.getenv("DB_PASSWORD"),
+#         "HOST": os.getenv("DB_HOST"),
+#         "PORT": os.getenv("DB_PORT"),
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -46,6 +54,7 @@ INSTALLED_APPS = [
     'basket',
     'products',
     'categories',
+    'orders',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -136,7 +145,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
- 
+
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'oleksandr'
 
