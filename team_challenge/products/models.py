@@ -22,6 +22,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(blank=True, upload_to='images/')
     description = models.TextField(blank=True)
     brand = models.ForeignKey(Brand, blank=True, on_delete=models.CASCADE)
