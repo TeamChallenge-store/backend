@@ -23,6 +23,7 @@ class OrderView(APIView):
     def get(self, request, order_id):
         """Отримання інформації про замовлення"""
 
+        print(order_id)
         try:
             order = Order.objects.get(pk=order_id)
 
@@ -51,22 +52,22 @@ class OrderView(APIView):
         return rest_response(response_data, status=status.HTTP_200_OK)
 
 
-def post(self, request):  # , pk, quantity):
-    """Створення замовлення"""
+    def post(self, request):  # , pk, quantity):
+        """Створення замовлення"""
 
-    # Отримання інформації про кошик
-    session = request.session
-    cart = CartAnonymous.objects.get(session_id=session.session_key)
-    cart_items = CartAnonymousItem.objects.filter(cart=cart)
+        # Отримання інформації про кошик
+        session = request.session
+        cart = CartAnonymous.objects.get(session_id=session.session_key)
+        cart_items = CartAnonymousItem.objects.filter(cart=cart)
 
-    serializer = CartAnonymousItemSerializer(cart_items, many=True)
-    response_data = {
-        "session_key": session.session_key,
-        "cart_items": serializer.data,
-        "total_items": sum(item.quantity for item in cart_items),
-        "total_price": sum(
-            item.quantity * item.product.price for item in cart_items
-        ),
-    }
+        serializer = CartAnonymousItemSerializer(cart_items, many=True)
+        response_data = {
+            "session_key": session.session_key,
+            "cart_items": serializer.data,
+            "total_items": sum(item.quantity for item in cart_items),
+            "total_price": sum(
+                item.quantity * item.product.price for item in cart_items
+            ),
+        }
 
-    return rest_response(response_data, status=status.HTTP_201_CREATED)
+        return rest_response(response_data, status=status.HTTP_201_CREATED)
