@@ -113,6 +113,8 @@ class CartView(APIView):
         return rest_response(
             {"success": "Cart delete"}, status=status.HTTP_204_NO_CONTENT
         )
+    
+    
 
     pk = openapi.Parameter('pk', in_=openapi.IN_QUERY, 
                            type= openapi.TYPE_INTEGER)

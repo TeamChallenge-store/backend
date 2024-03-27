@@ -14,18 +14,23 @@ from basket.serializers import CartItemSerializer, CartAnonymousItemSerializer
 class OrderView(APIView):
     """Операції з замовленням"""
 
+    pk = openapi.Parameter("pk", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
+
     @swagger_auto_schema(
+        operation_description="specify the order number as 'pk' to be showed",
+        manual_parameters=[pk],
         responses={
             200: openapi.Response(description="Success", schema=OrderItemSerializer()),
             404: openapi.Response(description="Not Found"),
-        }
+        },
     )
-    def get(self, request, order_id):
+    def get(self, request):
         """Отримання інформації про замовлення"""
 
-        print(order_id)
+        pk = request.query_params.get("pk")
+
         try:
-            order = Order.objects.get(pk=order_id)
+            order = Order.objects.get(pk=pk)
 
         except Order.DoesNotExist:
             return rest_response(
@@ -50,7 +55,6 @@ class OrderView(APIView):
         }
 
         return rest_response(response_data, status=status.HTTP_200_OK)
-
 
     def post(self, request):  # , pk, quantity):
         """Створення замовлення"""
