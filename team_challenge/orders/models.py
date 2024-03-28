@@ -10,10 +10,11 @@ SHIP_METHODS = [('NP', 'Nova Poshta'), ('UP', 'Ukr Poshta'), ('CR', 'Courier')]
 ORDER_STATUS = [("IN", "In the works"), ("SN", "Sent"), ("RC", "Received"), ("CL", "Closed")]
 
 class User(models.Model):
-    name = models.CharField(max_length=64)
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
     phone = models.CharField(max_length=64)
     email = models.EmailField(max_length=64)
-    adress = models.CharField(max_length=64)
+    address = models.CharField(max_length=64)
 
 
 class Order(models.Model):    

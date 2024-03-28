@@ -2,13 +2,11 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import  Response as rest_response
 from rest_framework import status
-# from django.http import HttpResponse
 from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
 from .serializers import CartItemSerializer, CartAnonymousItemSerializer
 from products.services import *
 
 from drf_yasg.utils import swagger_auto_schema
-# from rest_framework.decorators import api_view
 from drf_yasg import openapi
 
 
@@ -37,12 +35,9 @@ class CartView(APIView):
                 request.session.create()
             session = request.session
 
-            # cart, created = CartAnonymous.objects.get_or_create(
-            #     session_id=session.session_key
-            # )
-
-            cart = CartAnonymous.objects.get(session_id=session.session_key)
-
+            cart, created = CartAnonymous.objects.get_or_create(
+                session_id=session.session_key
+            )
             cart_items = CartAnonymousItem.objects.filter(cart=cart)
             serializer = CartAnonymousItemSerializer(cart_items, many=True)
             response_data = {
@@ -114,7 +109,7 @@ class CartView(APIView):
             {"success": "Cart delete"}, status=status.HTTP_204_NO_CONTENT
         )
     
-    
+
 
     pk = openapi.Parameter('pk', in_=openapi.IN_QUERY, 
                            type= openapi.TYPE_INTEGER)
