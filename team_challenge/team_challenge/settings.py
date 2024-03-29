@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'products',
     'categories',
     'orders',
+    'users',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -149,6 +150,8 @@ GS_BUCKET_NAME = 'oleksandr'
 
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
+
+AUTH_USER_MODEL = 'users.User'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),

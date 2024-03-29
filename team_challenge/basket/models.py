@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.sessions.models import Session
-from django.contrib.auth.models import User
 from products.models import Product
+import team_challenge.settings
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True, blank = True)
+    user = models.OneToOneField(team_challenge.settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     products = models.ManyToManyField(Product, through='CartItem')
 
 class CartItem(models.Model):
