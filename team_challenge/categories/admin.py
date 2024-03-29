@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Subcategory
+from import_export.admin import ImportExportModelAdmin
 
 class SubcategoryInline(admin.TabularInline):
     model = Subcategory
@@ -11,4 +12,5 @@ class CategoryAdmin(admin.ModelAdmin):
     ]
     prepopulated_fields = {'slug': ('name',)}  
 
-admin.site.register(Category, CategoryAdmin)
+class CategoryAdmin(ImportExportModelAdmin):
+    admin.site.register(Category, CategoryAdmin)
