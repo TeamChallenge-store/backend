@@ -1,5 +1,4 @@
 def show_cart(request, serializer, response_data, cart_items):
-    print(type(response_data))
     response_data.update(
         {
             "session_key": request.session.session_key,
