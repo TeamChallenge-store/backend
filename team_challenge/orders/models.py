@@ -16,6 +16,9 @@ class User(models.Model):
     email = models.EmailField(max_length=64)
     address = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
+    
 
 class Order(models.Model):    
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -24,6 +27,9 @@ class Order(models.Model):
     ship_method = models.CharField(max_length=2, choices=SHIP_METHODS, default="UP")
     payment = models.BooleanField(default=False)
     status = models.CharField(max_length=2, choices=ORDER_STATUS, default="IN")
+
+    # def __str__(self):
+    #     return self.id
 
 
 class OrderItem(models.Model):
