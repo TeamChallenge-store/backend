@@ -1,10 +1,7 @@
 from rest_framework import serializers
-from .models import OrderItem
+from .models import OrderItem, User
 
-class OrderItemSerializer(serializers.ModelSerializer):
-    # user_name =  serializers.ReadOnlyField(source="user.name"),
-    # user_phone = serializers.ReadOnlyField(source="user.phone"),
-    # user_email = serializers.ReadOnlyField(source="user.email"),
+class OrderItemSerializer(serializers.ModelSerializer):    
     product_id = serializers.ReadOnlyField(source="product.id")
     product_name = serializers.ReadOnlyField(source="product.name")
     product_price = serializers.ReadOnlyField(source="product.price")
@@ -13,13 +10,24 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = [
-            "id",
-            # "user_name",
-            # "user_phone",
-            # "user_email",
+            "id",            
             "product_id",
             "product_name",
             "quantity",
             "product_price",
             "product_image",
+        ]
+
+class UserSerializer(serializers.ModelSerializer):
+    # first_name = serializers.ReadOnlyField(source="user.first_name")
+    # phone = serializers.ReadOnlyField(source="user.phone")
+    # email = serializers.ReadOnlyField(source="user.email")
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "first_name",
+            "phone",
+            "email",
         ]
