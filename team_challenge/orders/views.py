@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from .models import Order, OrderItem, User
-from .serializers import OrderItemSerializer
+from .serializers import OrderItemSerializer, UserSerializer
 from basket.models import CartAnonymous, CartAnonymousItem
 from basket.serializers import CartItemSerializer, CartAnonymousItemSerializer
 
@@ -44,12 +44,13 @@ class OrderView(APIView):
         session = request.session
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
+        serializer_user = UserSerializer(user)
+
         response_data = {
             "message": "Anonymous",
             "session_key": session.session_key,
-            "first_name": user.first_name,
-            "phone": user.phone,
-            "email": user.email,
+            "order_id": order.id,
+            "user": serializer_user.data,
             "order_items": serializer.data,
             "total_items": sum(item.quantity for item in order_items),
             "total_price": sum(
@@ -71,33 +72,46 @@ class OrderView(APIView):
     def post(self, request):
         """Створення замовлення"""
 
-        # Отримання інформації про кошик
-        cart = CartAnonymous.objects.get(session_id=session.session_key)
-        cart_items = CartAnonymousItem.objects.filter(cart=cart)
-
         # Отримання інформації з запиту
         session = request.session
+        # user = request.user
         data = request.data
-        if not (data and data["First Name"] and data["Last Name"]
-                and data["Phone number"] and data["Email"] and data["Address"]):
-            return rest_response(
-                {"error": "invalid request"}, status=status.HTTP_400_BAD_REQUEST
-            )
-        # if not data:
-        #     first_name = "First Name"
-        #     last_name = "Last Name"
-        #     phone = "Phone number"
-        #     email = "Email"
-        #     address = "Address"
+        # if not (data and data["First Name"] and data["Last Name"]
+        #         and data["Phone number"] and data["Email"] and data["Address"]):
+        #     return rest_response(
+        #         {"error": "invalid request"}, status=status.HTTP_400_BAD_REQUEST
+        #     )
+
+        # Only for test
+        if not data:
+            first_name = "Test" #+str(cart.id)
+            last_name = "TestTest"
+            phone = "111111111"
+            email = "test@test.test"
+            address = "Test___Test"
         else:
             first_name = data["First Name"]
             last_name = data["Last Name"]
             phone = data["Phone number"]
             email = data["Email"]
             address = data["Address"]
-        # user = request.user
+
         user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email, address=address)
         # user.save()
+
+        # Отримання інформації про кошик
+        try:
+            cart = CartAnonymous.objects.get(session_id=session.session_key)
+        except CartAnonymous.DoesNotExist:
+            return rest_response(
+                {"error": "Basket does not exist"}, status=status.HTTP_404_NOT_FOUND
+            )
+        cart_items = CartAnonymousItem.objects.filter(cart=cart)
+        if sum(item.quantity for item in cart_items) == 0:
+            return rest_response(
+                {"error": "Basket is empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         order = Order.objects.create(user=user)
         # order.save()
@@ -105,15 +119,16 @@ class OrderView(APIView):
         for item in cart_items:
             order_item, created = OrderItem.objects.update_or_create(order=order,product=item.product)
         # order_item.save()
+        cart.delete()
 
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
+        serializer_user = UserSerializer(user)
         response_data = {
             "message": "Anonymous",
             "session_key": session.session_key,
-            "first_name": user.first_name,
-            "phone": user.phone,
-            "email": user.email,
+            "order_id": order.id,
+            "user": serializer_user.data,
             "order_items": serializer.data,
             "total_items": sum(item.quantity for item in order_items),
             "total_price": sum(
