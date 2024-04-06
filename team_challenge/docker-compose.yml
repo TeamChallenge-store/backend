@@ -15,8 +15,8 @@ services:
     container_name: certbot
     volumes: 
       - ./certbot/conf:/etc/letsencrypt
-      - /var/lib/jenkins/jobs/sitedeploy/workspace/backend/team_challenge/certbot:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email tsybulskyy.sasha@gmail.com -d camfire.pp.ua --agree-tos
+      - ./certbot/conf:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot -d camfire.pp.ua
 
   nginx:
     build: ./nginx
@@ -29,7 +29,7 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./certbot/conf:/etc/letsencrypt
-      - /var/lib/jenkins/jobs/sitedeploy/workspace/backend/team_challenge/certbot:/var/www/certbot
+      - ./certbot/conf:/var/www/certbot
 
   prometheus:
     image: prom/prometheus:latest
