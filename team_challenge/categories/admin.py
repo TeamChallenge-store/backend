@@ -6,6 +6,7 @@ class SubcategoryInline(admin.TabularInline):
     model = Subcategory
     prepopulated_fields = {'slug': ('name',)} 
 
+@admin.register(Category)
 class CategoryAdmin(ImportExportModelAdmin):  
     inlines = [
         SubcategoryInline,
