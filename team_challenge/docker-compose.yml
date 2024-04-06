@@ -16,7 +16,7 @@ services:
     volumes: 
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email tsybulskyy.sasha@gmail.com -d camfire.pp.ua --agree-tos
+    command: certonly --webroot -w /var/lib/jenkins/jobs/sitedeploy/workspace/backend/team_challenge/certbot/ --force-renewal --email tsybulskyy.sasha@gmail.com -d camfire.pp.ua --agree-tos
 
   nginx:
     build: ./nginx
