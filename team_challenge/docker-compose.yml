@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   django:
     build: .
     command: gunicorn team_challenge.wsgi:application --bind 0.0.0.0:8000
@@ -26,6 +25,9 @@ services:
     networks:
       - app
     restart: always
+    depends_on:
+      - letsencrypt
+      - django
 
   letsencrypt:
     container_name: "certbot"
