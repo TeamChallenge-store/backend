@@ -6,6 +6,7 @@ from .serializers import ProductDetailSerializer
 from .services import *
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from categories.services import filter_products
 
 class ProductListView(APIView):
     """"Вивід списку продуктів"""
@@ -22,8 +23,10 @@ class ProductListView(APIView):
         min_price = request.query_params.get('min_price', None)
         max_price = request.query_params.get('max_price', None)
         sort = request.query_params.get('sort')
+        search_query = request.query_params.get('search', None)
 
         filtered_products = filter_price_products(min_price, max_price)
+        filtered_products = filter_products(filtered_products, search_query=search_query)
 
         if sort == 'price_up':
             filtered_products = filtered_products.order_by('price')
