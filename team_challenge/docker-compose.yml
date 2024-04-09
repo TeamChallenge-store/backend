@@ -20,7 +20,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./etc/letsencrypt:/etc/letsencrypt:ro
+      - ./etc/letsencrypt:/etc/letsencrypt
       - ./tmp/acme-challenge:/tmp/acme-challenge
     depends_on:
       - letsencrypt
