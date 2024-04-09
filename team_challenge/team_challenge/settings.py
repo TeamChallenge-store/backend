@@ -13,7 +13,9 @@ if cert_file_path.exists():
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(cert_file_path)
 else:
     # Використовуємо сертифікат за замовчуванням
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/home/rest.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
+        str(BASE_DIR) + "/rest.json"
+    )
 
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 
