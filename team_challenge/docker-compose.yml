@@ -29,7 +29,7 @@ services:
   letsencrypt:
     container_name: "certbot"
     image: certbot/certbot
-    command: sh -c "certbot certonly --webroot -w /tmp/acme-challenge/ -d camfire.pp.ua --text --agree-tos --email tsybulskyy.sasha@gmail.com --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges=http"
+    command: sh -c "certbot certonly --nginx"
     entrypoint: ""
     volumes:
       - "./etc/letsencrypt:/etc/letsencrypt"
