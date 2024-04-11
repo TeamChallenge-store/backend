@@ -12,19 +12,6 @@ services:
     env_file:
       - .env
 
-  nginx:
-    container_name: "nginx_server"
-    build:
-      context: ./nginx
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./letsencrypt:/letsencrypt:ro
-      - ./tmp/acme-challenge:/tmp/acme-challenge
-    depends_on:
-      - django
-
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
