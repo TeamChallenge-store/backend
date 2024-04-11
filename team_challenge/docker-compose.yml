@@ -23,7 +23,6 @@ services:
       - ./etc/letsencrypt:/etc/letsencrypt:ro
       - ./tmp/acme-challenge:/tmp/acme-challenge
     depends_on:
-      - letsencrypt
       - django
 
   letsencrypt:
