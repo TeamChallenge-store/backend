@@ -39,12 +39,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 INSTALLED_APPS = [
     'basket',
@@ -153,6 +147,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
