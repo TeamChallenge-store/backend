@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'oleksandr'
+GS_BUCKET_NAME = 'bucket_photos1'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
