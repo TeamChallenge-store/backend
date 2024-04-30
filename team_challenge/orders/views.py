@@ -2,12 +2,12 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
 from rest_framework.response import Response as rest_response
 from rest_framework.views import APIView
+from rest_framework.settings import api_settings
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from .models import Order, OrderItem, User
-from .serializers import OrderItemSerializer, UserSerializer
+from .serializers import OrderItemSerializer, OrderUserSerializer, OrderSerializer
 from basket.models import CartAnonymous, CartAnonymousItem
-from basket.serializers import CartItemSerializer, CartAnonymousItemSerializer
 
 
 class OrderView(APIView):
@@ -19,7 +19,7 @@ class OrderView(APIView):
         operation_description="specify the order number as 'pk' to be showed",
         manual_parameters=[pk],
         responses={
-            200: openapi.Response(description="Success", schema=OrderItemSerializer()),
+            200: openapi.Response(description="Success", schema=OrderSerializer()),
             400: openapi.Response(description="Bad Request"),
             404: openapi.Response(description="Not Found"),
         },
@@ -40,11 +40,16 @@ class OrderView(APIView):
                 {"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
+        user = request.user
+        # Якщо незареєстрований користувач
+        # print(type(user))
+
         user = User.objects.get(pk=order.user_id)
+        # print(type(user))
         session = request.session
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
-        serializer_user = UserSerializer(user)
+        serializer_user = OrderUserSerializer(user)
 
         response_data = {
             "message": "Anonymous",
@@ -60,10 +65,31 @@ class OrderView(APIView):
 
         return rest_response(response_data, status=status.HTTP_200_OK)
 
+
     @swagger_auto_schema(
         operation_description="creating an order based on the basket data",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "First Name": openapi.Schema(type=openapi.TYPE_STRING),
+                "Last Name": openapi.Schema(type=openapi.TYPE_STRING),
+                "Phone number": openapi.Schema(type=openapi.TYPE_STRING),
+                "Email": openapi.Schema(type=openapi.TYPE_STRING),
+                "Address": openapi.Schema(type=openapi.TYPE_STRING),
+            },
+            # enum=['1','2','3','4']
+            example={
+                "First Name": "Olexa",
+                "Last Name": "Dovbush",
+                "Phone number": "098765432",
+                "Email": "example@test.ua",
+                "Address": "Ternopil",
+            },
+        ),
         responses={
-            201: openapi.Response(description="Create", schema=OrderItemSerializer()),
+            201: openapi.Response(
+                description="Create", schema=OrderSerializer()
+            ),
             400: openapi.Response(description="Bad Request"),
             404: openapi.Response(description="Not Found"),
         },
@@ -72,15 +98,12 @@ class OrderView(APIView):
     def post(self, request):
         """Створення замовлення"""
 
+        print(api_settings.DEFAULT_PARSER_CLASSES)
+
         # Отримання інформації з запиту
         session = request.session
         # user = request.user
         data = request.data
-        # if not (data and data["First Name"] and data["Last Name"]
-        #         and data["Phone number"] and data["Email"] and data["Address"]):
-        #     return rest_response(
-        #         {"error": "invalid request"}, status=status.HTTP_400_BAD_REQUEST
-        #     )
 
         # Only for test
         if not data:
@@ -123,7 +146,7 @@ class OrderView(APIView):
 
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
-        serializer_user = UserSerializer(user)
+        serializer_user = OrderUserSerializer(user)
         response_data = {
             "message": "Anonymous",
             "session_key": session.session_key,
