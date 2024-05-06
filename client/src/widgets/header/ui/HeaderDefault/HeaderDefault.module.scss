@@ -1,0 +1,61 @@
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+@use '../../../../shared/styles/helpers/mixins.scss' as mixin;
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+
+.logo {
+  @media (max-width: $m-viewport) {
+    display: none;
+  }
+}
+
+.inner {
+  @include mixin.flexible;
+
+  @media (max-width: $m-viewport) {
+    padding: 12px 0;
+  }
+
+  @media (max-width: $xs-viewport) {
+    padding: 12px 4px;
+  }
+}
+
+.leftHeader {
+  @include mixin.flexible;
+  gap: func.toRem(120);
+
+  @media (max-width: 1380px) {
+    gap: func.toRem(100);
+  }
+
+  @media (max-width: 1260px) {
+    gap: func.toRem(80);
+  }
+
+  @media (max-width: 1200px) {
+    gap: func.toRem(30);
+  }
+}
+
+.rightHeader {
+  @include mixin.flexible;
+  justify-content: end;
+  flex-grow: 1;
+  gap: func.toRem(5);
+
+  @media (max-width: $s-viewport) {
+    justify-content: center;
+  }
+}
+
+.burger {
+  display: none;
+
+  @media (max-width: $m-viewport) {
+    display: block;
+  }
+
+  @media (max-width: $xs-viewport) {
+    width: func.toRem(24);
+  }
+}

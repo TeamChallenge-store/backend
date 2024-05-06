@@ -1,0 +1,57 @@
+@use '../../shared/styles/helpers/variables.scss' as *;
+@use '../../shared/styles/helpers/functions.scss' as func;
+
+.bannerInfo {
+  color: $white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 56px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -25%);
+  text-transform: uppercase;
+
+  @media (max-width: $s-viewport) {
+    width: 340px;
+    gap: 26px;
+    transform: translate(-50%, -37%);
+  }
+}
+
+.bannerTitle {
+  width: func.toRem(1036);
+  font-weight: 700;
+  font-size: func.toRem(48);
+  text-align: center;
+
+  @media (max-width: $m-viewport) {
+    width: func.toRem(850);
+    font-size: func.toRem(39);
+  }
+
+  @media (max-width: $sm-viewport) {
+    width: func.toRem(650);
+    font-size: func.toRem(30);
+  }
+
+  @media (max-width: $s-viewport) {
+    font-size: func.toRem(32);
+    width: func.toRem(332);
+    line-height: 38px;
+  }
+}
+
+.bannerBtn {
+  color: $white;
+  font-weight: 400;
+  font-size: func.toRem(24);
+  padding-bottom: 4px;
+  border-bottom: 1px solid $white;
+  text-transform: uppercase;
+
+  @media (max-width: $s-viewport) {
+    font-size: func.toRem(20);
+  }
+}

@@ -1,0 +1,214 @@
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+@use '../../../../shared/styles/helpers/mixins.scss' as mixin;
+
+.cardContainer {
+  display: flex;
+  max-height: func.toRem(700);
+}
+
+.leftContainer {
+  position: relative;
+  width: func.toRem(662);
+  margin-right: func.toRem(8);
+
+  .cardButton {
+    max-width: func.toRem(333);
+  }
+
+  .cardButtonArrowFirst {
+    display: none;
+  }
+}
+
+.cardHoverEffect {
+  height: 100%;
+}
+
+.cardHoverEffect:hover {
+  .cardImage {
+    transform: scale(1.03);
+  }
+}
+
+.card {
+  border-radius: func.toRem(16);
+  cursor: auto;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+  display: block;
+  background-color: $gray;
+  overflow: hidden;
+}
+
+.rightContainer {
+  position: relative;
+  width: func.toRem(648);
+
+  .card {
+    position: relative;
+    height: func.toRem(346);
+  }
+
+  .card:nth-child(1) {
+    margin-bottom: func.toRem(8);
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    bottom: func.toRem(24);
+  }
+
+  .cardHoverEffect {
+    height: auto;
+  }
+}
+
+.boxLeftContent {
+  max-width: func.toRem(448);
+  color: $white;
+
+  .title {
+    margin-bottom: func.toRem(16);
+  }
+
+  .subtitle {
+    font-size: func.toRem(24);
+    line-height: func.toRem(24);
+    margin: 0;
+    margin-bottom: func.toRem(37);
+  }
+}
+
+.content {
+  position: absolute;
+  left: func.toRem(24);
+  right: func.toRem(24);
+  bottom: func.toRem(35);
+}
+
+.title {
+  font-size: func.toRem(48);
+  line-height: func.toRem(38);
+  max-width: func.toRem(448);
+  color: #fff;
+}
+
+.cardButton {
+  pointer-events: auto;
+  max-width: func.toRem(64);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: func.toRem(16);
+  pointer-events: none;
+  @include mixin.button-transition(transform, 0.3s);
+}
+
+@media (max-width: $sm-viewport) {
+  .cardContainer {
+    flex-direction: column;
+    max-height: fit-content;
+  }
+
+  .leftContainer {
+    margin-right: 0;
+    width: 100%;
+    margin-bottom: 16px;
+    max-height: func.toRem(346);
+    .cardButton {
+      display: none;
+    }
+
+    .cardButtonArrowFirst {
+      display: flex;
+      max-width: func.toRem(64);
+    }
+  }
+
+  .card {
+    margin-bottom: 16px;
+    height: func.toRem(346);
+    pointer-events: auto;
+  }
+
+  .cardImage {
+    pointer-events: auto;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .boxLeftContent {
+    .subtitle {
+      margin-bottom: 8px;
+    }
+  }
+
+  .rightContainer {
+    width: 100%;
+    .card:last-child {
+      margin-bottom: 0;
+    }
+    .title {
+      margin-bottom: 8px;
+    }
+
+    .content {
+      bottom: 16px;
+    }
+  }
+
+  .rightContainer .card:nth-child(1) {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: $s-viewport) {
+  .title {
+    font-size: 36px;
+    line-height: 36px;
+    max-width: 190px;
+  }
+
+  .boxLeftContent {
+    .subtitle {
+      font-size: 16px;
+      line-height: 16px;
+      max-width: 185px;
+    }
+  }
+
+  .cardHoverEffect:hover {
+    .cardImage {
+      transform: none;
+    }
+  }
+
+  .leftContainer,
+  .rightContainer {
+    .cardButton {
+      height: 50px;
+      width: 50px;
+    }
+  }
+}
+
+@media (max-width: $xs-viewport) {
+  .leftContainer,
+  .card {
+    max-height: 280px;
+  }
+}

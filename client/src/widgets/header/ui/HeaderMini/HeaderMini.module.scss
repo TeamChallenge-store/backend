@@ -1,0 +1,34 @@
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+@use '../../../../shared/styles/helpers/mixins.scss' as mixin;
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+
+.inner {
+  @include mixin.flexible;
+
+  @media (max-width: $m-viewport) {
+    padding: 12px 0;
+  }
+
+  @media (max-width: $xs-viewport) {
+    padding: 12px 4px;
+  }
+}
+
+.logo {
+  padding: func.toRem(25) 0;
+
+  @media (max-width: $m-viewport) {
+    padding: 0;
+  }
+}
+
+.infoItem {
+  display: block;
+  text-align: right;
+  font-size: func.toRem(18);
+  line-height: func.toRem(21.6);
+
+  @media (max-width: $s-viewport) {
+    display: none;
+  }
+}

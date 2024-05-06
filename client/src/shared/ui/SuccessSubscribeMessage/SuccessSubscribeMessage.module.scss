@@ -1,0 +1,34 @@
+@use '../../styles/helpers/variables.scss' as *;
+@use '../../styles/helpers/mixins.scss' as mixin;
+@use '../../styles/helpers/functions.scss' as func;
+
+.successSubmit {
+  display: block;
+  padding: func.toRem(15.5) func.toRem(11);
+  background-color: $green;
+  font-size: func.toRem(24);
+  line-height: func.toRem(22.08);
+  text-align: center;
+  width: 100%;
+  color: $white;
+  text-transform: uppercase;
+  z-index: 2;
+  position: absolute;
+  bottom: 0;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+.showMessage {
+  opacity: 1;
+}
+
+@media (max-width: $sm-viewport) {
+  .successSubmit {
+    font-size: 16px;
+    line-height: 18.4px;
+    padding: 16px 0;
+  }
+}

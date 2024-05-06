@@ -1,0 +1,16 @@
+@mixin flexible {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin placeholder($w, $h) {
+  width: $w;
+  height: $h;
+  background-color: #e3e2e2;
+  border-radius: 10px;
+}
+
+@mixin button-transition($transition-property, $duration) {
+  transition: $transition-property $duration;
+}

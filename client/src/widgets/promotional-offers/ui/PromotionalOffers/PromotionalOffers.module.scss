@@ -1,0 +1,205 @@
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+
+.offers {
+  margin-bottom: func.toRem(-95);
+}
+.offersBunner {
+  background-image: url('./promo.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.offersBunnerContent {
+  padding: func.toRem(75) func.toRem(24) func.toRem(155) func.toRem(60);
+  background-color: $green;
+  color: $white;
+  max-width: func.toRem(509);
+}
+
+.offersSubtitle {
+  font-size: func.toRem(20);
+  line-height: func.toRem(24);
+  color: $norway200;
+  display: block;
+  margin-bottom: func.toRem(24);
+  text-transform: uppercase;
+}
+
+.offersTitle {
+  font-size: func.toRem(48);
+  line-height: func.toRem(52.8);
+  margin-bottom: func.toRem(20);
+  text-transform: uppercase;
+}
+
+.offersDescription {
+  font-size: func.toRem(20);
+  line-height: func.toRem(23.6);
+  margin-bottom: func.toRem(34);
+}
+
+.offersLink {
+  max-width: func.toRem(333);
+}
+
+.swiperWrapper {
+  padding: 2px;
+}
+
+.offersSlider {
+  position: relative;
+  top: func.toRem(-95);
+}
+
+.swiperSlide {
+  width: 250px;
+}
+
+.swiperNavigationArrows {
+  position: absolute;
+  top: func.toRem(-104);
+  right: func.toRem(60);
+  display: flex;
+}
+
+.swiperPrev,
+.swiperNext {
+  width: func.toRem(64);
+  height: func.toRem(64);
+  background-color: white;
+  border-radius: func.toRem(8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: func.toRem(22);
+    height: func.toRem(22);
+  }
+
+  &:disabled {
+    border: none;
+  }
+}
+
+.swiperPrev {
+  margin-right: func.toRem(16);
+}
+
+.swiperNext {
+  transform: rotate(180deg);
+}
+
+@media (max-width: $sm-viewport) {
+  .offers {
+    margin-bottom: func.toRem(-55);
+  }
+
+  .offersBunnerContent {
+    background: #00000099;
+    max-width: 100%;
+    padding: 43px 35px 15px 16px;
+  }
+
+  .offersSubtitle {
+    font-size: 16px;
+    line-height: 19.2px;
+    margin-bottom: 8px;
+  }
+
+  .offersTitle {
+    font-size: 32px;
+    line-height: 38.4px;
+    margin-bottom: 16px;
+  }
+
+  .offersDescription {
+    font-size: 16px;
+    line-height: 22.08px;
+    margin-bottom: 51px;
+  }
+
+  .offersLink {
+    background-color: transparent;
+    padding: 0;
+    width: max-content;
+    color: white;
+    text-decoration: underline;
+    position: absolute;
+    z-index: 2;
+    font-size: 16px;
+
+    svg {
+      path {
+        stroke: $white;
+      }
+    }
+  }
+
+  .offersSlider {
+    top: -37px;
+    padding-top: 80px;
+    z-index: 1;
+  }
+
+  .offersSlider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    background-color: $green;
+    z-index: -1;
+  }
+
+  .swiperNavigationArrows {
+    position: initial;
+    display: flex;
+    justify-content: end;
+    padding-top: 19px;
+  }
+
+  .swiperPrev,
+  .swiperNext {
+    border: 1px solid $norway950;
+    width: 50px;
+    height: 50px;
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .swiperPrev {
+    margin-right: 12px;
+  }
+}
+
+@media (max-width: $xs-viewport) {
+  .offers {
+    margin-bottom: func.toRem(-32);
+  }
+
+  .offersTitle {
+    max-width: 286px;
+  }
+
+  .offersSubtitle {
+    line-height: 21.2px;
+  }
+}
+
+@media (max-width: 374px) {
+  .imageInner {
+    margin: 0 auto;
+    display: table;
+  }
+
+  .offersSlider {
+    padding-top: 70px;
+  }
+}

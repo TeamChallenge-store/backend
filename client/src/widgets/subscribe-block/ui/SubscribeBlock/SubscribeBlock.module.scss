@@ -1,0 +1,59 @@
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+
+.subscribe {
+  display: flex;
+}
+
+.title {
+  font-weight: 700;
+  font-size: func.toRem(48);
+  line-height: func.toRem(52.8);
+  margin-right: func.toRem(83);
+  color: $green;
+  text-transform: uppercase;
+  padding: func.toRem(20) 0 func.toRem(8) 0;
+  max-width: func.toRem(589);
+}
+
+.form {
+  margin-bottom: func.toRem(26);
+}
+
+.formDescription {
+  font-size: func.toRem(18);
+  line-height: func.toRem(21.6);
+  color: $gray600;
+}
+
+@media (max-width: $m-viewport) {
+  .subscribe {
+    display: block;
+  }
+
+  .title {
+    margin-right: 0;
+    padding: 0;
+  }
+}
+
+@media (max-width: $sm-viewport) {
+  .title {
+    margin-bottom: 10px;
+  }
+
+  .form {
+    margin-bottom: 0;
+  }
+
+  .formDescription {
+    display: none;
+  }
+}
+
+@media (max-width: $s-viewport) {
+  .title {
+    font-size: 32px;
+    line-height: 38.4px;
+  }
+}

@@ -1,0 +1,43 @@
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+
+.joinUs {
+  width: func.toRem(217);
+
+  @media (max-width: $sm-viewport) {
+    width: func.toRem(190);
+  }
+}
+
+.joinTitle {
+  padding-bottom: func.toRem(16);
+  font-weight: 500;
+  font-size: func.toRem(25);
+  color: $white;
+
+  @media (max-width: $s-viewport) {
+    font-weight: 400;
+    font-size: func.toRem(20);
+    padding-bottom: 12px;
+  }
+}
+
+.icons {
+  display: flex;
+  gap: func.toRem(16);
+
+  @media (min-width: $max-viewport) {
+    padding-bottom: 10px;
+  }
+}
+
+.icon {
+  width: func.toRem(24);
+  height: func.toRem(24);
+
+  @media (max-width: $s-viewport) {
+    width: 24px;
+    height: 36px;
+    padding-bottom: 12px;
+  }
+}

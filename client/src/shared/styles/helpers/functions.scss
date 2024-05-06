@@ -1,0 +1,5 @@
+@use './variables.scss' as *;
+
+@function toRem($px) {
+  @return calc($px / $default-font) + rem;
+}
