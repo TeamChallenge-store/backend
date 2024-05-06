@@ -8,6 +8,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from categories.services import filter_products
 
+
 class ProductListView(APIView):
     """"Вивід списку продуктів"""
 
@@ -18,7 +19,6 @@ class ProductListView(APIView):
             404: openapi.Response(description='Not Found')
         }
     )
-
     def get(self, request):
         min_price = request.query_params.get('min_price', None)
         max_price = request.query_params.get('max_price', None)
@@ -39,6 +39,7 @@ class ProductListView(APIView):
 
         return paginate_product_list(filtered_products, request)
 
+
 class ProductDetailView(APIView):
     """Деталі продукту"""
 
@@ -55,4 +56,3 @@ class ProductDetailView(APIView):
             return responce(serializer.data, status=status.HTTP_200_OK)
         except Product.DoesNotExist:
             return responce({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
-

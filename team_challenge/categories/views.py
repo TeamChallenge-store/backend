@@ -6,10 +6,9 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from products.serializers import ProductListSerializer  
+from products.serializers import ProductListSerializer
 from products.models import Product
 from .models import Category, Subcategory
-from .serializers import CategorySerializer
 from .services import CustomPageNumberPagination, filter_products, sort_products
 from .serializers import CategorySerializer, SubcategorySerializer
 from .filters import ProductFilter
@@ -23,12 +22,12 @@ class CategoryList(APIView):
             200: openapi.Response(description='Success'),
         }
     )
-
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
-    
+
+
 class CategoryDetail(APIView):
     """Перехід на певну категорію"""
 
@@ -39,30 +38,29 @@ class CategoryDetail(APIView):
             raise Http404
 
     @swagger_auto_schema(
-            responses={
-                200: openapi.Response(description='Success', schema=CategorySerializer),
-            }
-    ) 
-
-    def get(self, request, category_slug=None, format=None):
+        responses={
+            200: openapi.Response(description='Success', schema=CategorySerializer),
+        }
+    )
+    def get(self, request, category_slug=None):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
         products = Product.objects.filter(category=category)
-        
+
         # Sorting and search
         search_query = request.query_params.get('search', None)
         sort_option = request.query_params.get('sort')
         products = filter_products(products, search_query=search_query)
         products = sort_products(products, sort_option)
-        
+
         # Fileter
         product_filter = ProductFilter(request.query_params, queryset=products)
         products = product_filter.qs
-        
+
         # Pagination
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
-        
+
         # Serialization
         serialized_products = ProductListSerializer(paginated_products, many=True, context={'request': request})
 
@@ -70,8 +68,7 @@ class CategoryDetail(APIView):
         response_data = serializer.data
         response_data['products'] = serialized_products.data
         return paginator.get_paginated_response(response_data)
-    
-          
+
 
 class SubcategoryDetail(APIView):
     """Перехід на підкатегорію"""
@@ -83,15 +80,14 @@ class SubcategoryDetail(APIView):
             return subcategory
         except (Category.DoesNotExist, Subcategory.DoesNotExist):
             raise Http404
-        
+
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success', schema=SubcategorySerializer),
         }
     )
-    
-    def get(self, request, category_slug, subcategory_slug, format=None):
-        subcategory = self.get_object(category_slug, subcategory_slug)  
+    def get(self, request, category_slug, subcategory_slug):
+        subcategory = self.get_object(category_slug, subcategory_slug)
         products = Product.objects.filter(subcategory=subcategory)
 
         # Sorting and search
@@ -99,15 +95,15 @@ class SubcategoryDetail(APIView):
         sort_option = request.query_params.get('sort')
         products = filter_products(products, search_query=search_query)
         products = sort_products(products, sort_option)
-        
+
         # Fileter
         product_filter = ProductFilter(request.query_params, queryset=products)
         products = product_filter.qs
-        
+
         # Pagination
         paginator = CustomPageNumberPagination()
         paginated_products = paginator.paginate_queryset(products, request)
-        
+
         # Serialization
         serialized_products = ProductListSerializer(paginated_products, many=True, context={'request': request})
 

@@ -3,7 +3,4 @@ __pycache__/
 .idea/
 db.sqlite3
 team_challenge/.env_production
-team_challenge/.env
-.env_production
-.env
 team_challenge/rest_test.json
