@@ -5,9 +5,9 @@ from django.db import models
 from django.contrib.sessions.models import Session
 from products.models import Product
 
-
 SHIP_METHODS = [('NP', 'Nova Poshta'), ('UP', 'Ukr Poshta'), ('CR', 'Courier')]
 ORDER_STATUS = [("IN", "In the works"), ("SN", "Sent"), ("RC", "Received"), ("CL", "Closed")]
+
 
 class User(models.Model):
     first_name = models.CharField(max_length=64)
@@ -18,9 +18,9 @@ class User(models.Model):
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
-    
 
-class Order(models.Model):    
+
+class Order(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     products = models.ManyToManyField(Product, through="OrderItem")
     time_create = models.DateTimeField(auto_now_add=True)
