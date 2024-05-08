@@ -28,7 +28,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     old_price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(blank=True, upload_to='images/')
-    description = models.CharField(blank=True)
+    description = models.CharField(max_length=255, blank=True)
     brand = models.ForeignKey(Brand, blank=True, on_delete=models.CASCADE)
     quantity_in_stock = models.IntegerField()
     rate = models.IntegerField(default=0)
