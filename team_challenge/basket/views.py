@@ -2,6 +2,7 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
 from rest_framework.response import  Response as rest_response
 from rest_framework import status
+from products.serializers import ProductListSerializer
 from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
 from .serializers import CartItemSerializer, CartAnonymousItemSerializer
 # from products.services import *
@@ -17,8 +18,12 @@ class CartView(APIView):
     @swagger_auto_schema(
         responses={
             200: openapi.Response(
-                description="Success", schema=CartItemSerializer(many=True)
+                description="Success", 
+                schema=CartAnonymousItemSerializer(many=True)
             ),
+            # 200: openapi.Response(
+            #     description="Success", schema=CartItemSerializer(many=True)
+            # ),
         }
     )
 
@@ -29,7 +34,8 @@ class CartView(APIView):
         user = request.user
 
         # Якщо незареєстрований користувач
-        if type(user) is AnonymousUser:
+        # if type(user) is AnonymousUser:
+        if not request.user.is_authenticated:
             if not request.session.session_key:
                 request.session.create()
             session = request.session
@@ -39,6 +45,8 @@ class CartView(APIView):
             )
             cart_items = CartAnonymousItem.objects.filter(cart=cart)
             serializer = CartAnonymousItemSerializer(cart_items, many=True)
+            # serializer = ProductListSerializer(cart_items, many=True)
+
             response_data = {"message": "Anonymous"}
 
         # Зареєстрований користувач
@@ -80,7 +88,7 @@ class CartView(APIView):
                 return rest_response(
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
                 )
-
+        # Зареєстрований користувач
         else:
             try:
                 cart = Cart.objects.get(user=user)
@@ -197,6 +205,10 @@ class CartView(APIView):
                 description="Product removed from cart",
                 schema=CartItemSerializer(many=True),
             ),
+            202: openapi.Response(
+                description="Product added to cart",
+                schema=CartItemSerializer(many=True),
+            ),
             400: openapi.Response(description="Bad Request"),
             404: openapi.Response(description="Not Found"),
         },
@@ -279,8 +291,19 @@ class CartView(APIView):
             serializer = CartItemSerializer(cart_items, many=True)
 
         response_data = show_cart(request, serializer, response_data, cart_items)
+        if created:
+            status1 = status.HTTP_201_CREATED
+        else:
+            if int(quantity) == 0:
+                status1 = status.HTTP_200_OK
+            else:
+                status1 = status.HTTP_202_ACCEPTED  # SUCCESS_ADDED_PRODUCT
         return rest_response(
-            response_data,                
-            status=status.HTTP_200_OK if int(quantity) == 0 else 
-            status.HTTP_201_CREATED
+            response_data,
+            status=status1,
+            # status=(
+            #     status.HTTP_200_OK if int(quantity) == 0
+            #     # if created: ???
+            #     else status.HTTP_201_CREATED
+            # ),
         )
