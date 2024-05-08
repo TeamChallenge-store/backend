@@ -1,0 +1,111 @@
+@use '../../../../../shared/styles/helpers/variables.scss' as *;
+@use '../../../../../shared/styles/helpers/functions.scss' as func;
+
+.cartSvg {
+  width: 24px;
+  height: 24px;
+
+  @media (min-width: $max-viewport) {
+    width: func.toRem(24);
+    height: func.toRem(24);
+  }
+
+  @media (max-width: $s-viewport) {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.cartCheck {
+  width: 20px;
+  height: 20px;
+}
+
+.addButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  width: 66px;
+  transition: all 0.1s ease-in 0s;
+  border-color: transparent;
+  border-radius: 8px;
+
+  overflow-x: hidden;
+
+  @media (min-width: $max-viewport) {
+    width: func.toRem(66);
+  }
+
+  @media (max-width: $s-viewport) {
+    width: 52px;
+    justify-content: center;
+    overflow: initial;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      width: 154px;
+      border-color: $green;
+
+      @media (min-width: $max-viewport) {
+        width: func.toRem(154);
+      }
+    }
+  }
+}
+
+.controlButton {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 0;
+  gap: 5px;
+  right: calc(100% - 65px);
+  height: 100%;
+  padding-left: 4px;
+  width: 110px;
+  border-radius: func.toRem(8);
+  transform: translateX(50%);
+  font-size: 20px;
+  border: 2px solid $green;
+
+  @media (min-width: $max-viewport) {
+    gap: func.toRem(5);
+    padding-left: func.toRem(4);
+    width: func.toRem(110);
+    font-size: func.toRem(20);
+    border: func.toRem(2.1) solid $green;
+    right: calc(100% - func.toRem(65));
+  }
+
+  @media (max-width: $s-viewport) {
+    display: none;
+  }
+
+  button {
+    color: $green;
+  }
+
+  .left,
+  .right {
+    padding: 6px 6px;
+
+    @media (min-width: $max-viewport) {
+      padding: func.toRem(6) func.toRem(6);
+    }
+  }
+
+  .count {
+    display: block;
+    width: 15px;
+    text-align: center;
+
+    @media (min-width: $max-viewport) {
+      width: func.toRem(15);
+    }
+  }
+}
+
+.hidden {
+  display: none;
+}

@@ -1,0 +1,100 @@
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+@use '../../../../shared/styles/helpers/functions' as func;
+@use '../../../../shared/styles/helpers/mixins.scss' as mixin;
+
+.nav {
+  max-width: 672px;
+
+  @media (max-width: $m-viewport) {
+    display: none;
+  }
+
+  @media (min-width: $max-viewport) {
+    max-width: func.toRem(672);
+  }
+}
+
+.list {
+  @include mixin.flexible;
+  gap: func.toRem(41.2);
+  padding: func.toRem(27) 0 func.toRem(23) 0;
+
+  @media (min-width: $max-viewport) {
+    gap: func.toRem(41.2);
+  }
+
+  @media (max-width: $m-viewport) {
+    padding: func.toRem(26) 0;
+  }
+
+  @media (max-width: $s-viewport) {
+    padding: 12px 0;
+  }
+}
+
+.active {
+  border: none;
+  border-bottom: func.toRem(2) solid $green;
+}
+
+.link {
+  display: inline-block;
+  position: relative;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  @include mixin.button-transition(border-bottom, 0.3s);
+
+  &:hover {
+    border-bottom-color: $green;
+  }
+
+  &:focus {
+    outline-color: transparent;
+  }
+}
+
+.item {
+  position: relative;
+
+  &:last-child {
+    color: $red;
+  }
+
+  .submenu {
+    pointer-events: none;
+  }
+
+  &:hover .submenu {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.submenu {
+  position: absolute;
+  padding: func.toRem(24) func.toRem(48);
+  font-size: func.toRem(18);
+  line-height: func.toRem(21.6);
+  z-index: 1;
+  background-color: $white;
+  border-radius: 0 0 func.toRem(8) func.toRem(8);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  top: func.toRem(22);
+
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  li {
+    margin-bottom: func.toRem(18);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.itemRed {
+  color: $red;
+}

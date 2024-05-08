@@ -1,0 +1,105 @@
+@use './helpers/normalize.scss';
+@use './helpers/variables.scss' as *;
+@use './helpers/functions.scss' as *;
+
+@import './fonts.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: calc(100vw / 1440 * $default-font);
+
+  @media (max-width: 1024px) {
+    font-size: calc(100vw / 1024 * $default-font);
+  }
+
+  @media (max-width: 767px) {
+    font-size: calc(100vw / 767 * $default-font);
+  }
+
+  @media (max-width: 500px) {
+    font-size: calc(100vw / 500 * $default-font);
+  }
+
+  @media (max-width: 376px) {
+    font-size: calc(100vw / 375 * $default-font);
+  }
+}
+
+body {
+  font-family: 'Helvetica', sans-serif;
+  font-weight: 400;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  padding-top: toRem(105);
+  flex: 1 1 auto;
+
+  @media (max-width: $l-viewport) {
+    padding-top: 105px;
+  }
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+.container {
+  max-width: toRem(1440);
+  padding-left: toRem(60);
+  padding-right: toRem(60);
+  margin: auto;
+
+  @media (max-width: 1024px) {
+    padding: 0 toRem(40);
+  }
+
+  @media (max-width: 500px) {
+    padding: 0 toRem(20);
+  }
+
+  @media (max-width: 376px) {
+    padding: 0 toRem(16);
+  }
+}

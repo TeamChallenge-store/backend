@@ -1,24 +1,28 @@
 from rest_framework import serializers
 from .models import Product, Brand, Color
 
+
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
         fields = ['name']
+
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
         fields = ['name']
 
+
 class ProductListSerializer(serializers.ModelSerializer):
     brand = serializers.StringRelatedField(source='brand.name')
-    color = serializers.StringRelatedField(source='color.name')  
+    color = serializers.StringRelatedField(source='color.name')
     _links = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ['id', 'category', 'subcategory', 'name', 'price', 'old_price', 'image', 'quantity_in_stock', 'brand', 'color', 'rate', '_links']
+        fields = ['id', 'category', 'subcategory', 'name', 'price', 'old_price', 'image', 'quantity_in_stock', 'brand',
+                  'color', 'rate', 'subtitle', 'subscription', 'features', '_links']
 
     def get__links(self, obj):
         request = self.context.get('request')
@@ -33,8 +37,8 @@ class ProductListSerializer(serializers.ModelSerializer):
             }
         return None
 
+
 class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-

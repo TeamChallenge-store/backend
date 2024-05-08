@@ -5,7 +5,6 @@ from django.db import models
 from django.contrib.sessions.models import Session
 from products.models import Product
 
-
 DELIVERY_METHODS = [('Nova Poshta', 1), ('Ukr Poshta', 2), ('Courier', 3)]
 ORDER_STATUS = [("IN", "In the works"), ("SN", "Sent"), ("RC", "Received"), ("CL", "Closed")]
 PAYMENT_METHOD = [
@@ -48,6 +47,7 @@ class Address(models.Model):
     np_department = models.CharField(max_length=64, null=True, blank=True)
     up_department = models.CharField(max_length=64, null=True, blank=True)
 
+
 class User(models.Model):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
@@ -62,7 +62,8 @@ class UserAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
 
-class Order(models.Model):    
+
+class Order(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     products = models.ManyToManyField(Product, through="OrderItem")
     address = models.OneToOneField(

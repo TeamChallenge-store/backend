@@ -1,6 +1,16 @@
-version: '3'
+version: "3"
+
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+
   django:
+    container_name: "django"
     build: .
     command: gunicorn team_challenge.wsgi:application --bind 0.0.0.0:8000
     volumes:
@@ -10,12 +20,39 @@ services:
     env_file:
       - .env
 
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A team_challenge.celery_app.app flower
+    volumes:
+      - ./team_challenge:/backend/team_challenge
+    environment:
+      - REDIS_HOST=redis
     depends_on:
       - django
+      - redis
+    ports:
+      - "5555:5555"
+
+  worker:
+    build:
+      context: .
+    container_name: "worker_1"
+    hostname: worker
+    entrypoint: celery
+    command: -A team_challenge.celery_app.app worker --loglevel=info
+    volumes:
+      - ./team_challenge:/team_challenge
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   prometheus:
     image: prom/prometheus:latest
@@ -46,6 +83,3 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
     depends_on:
       - prometheus
-    
-
-

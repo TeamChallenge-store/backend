@@ -1,0 +1,47 @@
+@use '../../../../shared/styles/helpers/functions.scss' as func;
+@use '../../../../shared/styles/helpers/variables.scss' as *;
+
+.icons {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  @media (max-width: $m-viewport) {
+    min-width: auto;
+  }
+}
+
+.icon {
+  width: func.toRem(24);
+  margin: 0px func.toRem(8);
+
+  @media (max-width: $s-viewport) {
+    margin: 0;
+  }
+}
+
+.mobHide {
+  @media (max-width: $m-viewport) {
+    display: none;
+  }
+}
+
+.iconBtn {
+  position: relative;
+}
+
+.cartCount {
+  position: absolute;
+  bottom: func.toRem(18);
+  left: func.toRem(11);
+  width: func.toRem(17);
+  height: func.toRem(17);
+  border: func.toRem(2) solid $black;
+  background: $white;
+  border-radius: 50%;
+  color: $black;
+  font-size: func.toRem(12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

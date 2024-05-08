@@ -18,7 +18,3 @@ RUN poetry install && rm -rf $POETRY_CACHE_DIR
 
 ENV VIRTUAL_ENV=/backend/.venv \
     PATH="/backend/.venv/bin:$PATH"
-
-COPY ./entrypoint.sh /
-
-ENTRYPOINT ["sh", "/entrypoint.sh"]

@@ -3,7 +3,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 cert_file_path = BASE_DIR / "rest_test.json"
@@ -14,7 +13,7 @@ if cert_file_path.exists():
 else:
     # Використовуємо сертифікат за замовчуванням
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
-        str(BASE_DIR) + "/rest.json"
+            str(BASE_DIR) + "/rest.json"
     )
 
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
@@ -23,7 +22,6 @@ if PRODUCTION_ENV_FILE.exists():
     load_dotenv(dotenv_path=PRODUCTION_ENV_FILE)
 else:
     load_dotenv()
-
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
@@ -38,13 +36,6 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 INSTALLED_APPS = [
     'basket',
@@ -89,7 +80,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
 ]
 
 ROOT_URLCONF = 'team_challenge.urls'
@@ -112,7 +103,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'team_challenge.wsgi.application'
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -128,7 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -137,22 +126,20 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'oleksandr'
-
+GS_BUCKET_NAME = 'bucket_photos1'
 
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -199,7 +186,14 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,  # Перевірка паролю під час реєстрації
     'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': False,
+    'ACTIVATION_URL': 'api/v1/auth/users/activation/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS': {},
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'djangorest86@gmail.com'
+EMAIL_HOST_PASSWORD = 'hgfmgjiyrmnkeemb'

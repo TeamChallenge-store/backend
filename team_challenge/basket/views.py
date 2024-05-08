@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.views import APIView
-from rest_framework.response import  Response as rest_response
+from rest_framework.response import Response as rest_response
 from rest_framework import status
 from products.serializers import ProductListSerializer
 from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
@@ -26,7 +26,6 @@ class CartView(APIView):
             # ),
         }
     )
-
     def get(self, request):
         """Отримання інформації про кошик"""
 
@@ -73,7 +72,6 @@ class CartView(APIView):
             404: openapi.Response(description="Not Found"),
         }
     )
-
     def delete(self, request):
         """Очищення кошика"""
 
@@ -100,8 +98,8 @@ class CartView(APIView):
         cart.delete()
         return rest_response({"success": "Cart delete"}, status=status.HTTP_200_OK)
 
-    pk = openapi.Parameter('pk', in_=openapi.IN_QUERY, 
-                           type= openapi.TYPE_INTEGER)
+    pk = openapi.Parameter('pk', in_=openapi.IN_QUERY,
+                           type=openapi.TYPE_INTEGER)
 
     @swagger_auto_schema(
         operation_description="specify the product number as 'pk' to be deleted",
@@ -213,7 +211,6 @@ class CartView(APIView):
             404: openapi.Response(description="Not Found"),
         },
     )
-
     def post(self, request):  # , pk, quantity
         """Додавання товару до кошика"""
 
@@ -270,10 +267,10 @@ class CartView(APIView):
 
             cart_item.delete()
             response_data.update({
-                    "success": "Product '"
-                    + str(product.name)
-                    + "' removed from cart"
-                })
+                "success": "Product '"
+                           + str(product.name)
+                           + "' removed from cart"
+            })
 
         # додавання товару до кошика, якщо кількість != 0
         else:
@@ -306,4 +303,5 @@ class CartView(APIView):
             #     # if created: ???
             #     else status.HTTP_201_CREATED
             # ),
+
         )

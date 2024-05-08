@@ -33,9 +33,10 @@ class OrderView(APIView):
     )
     def get(self, request):
         """Отримання інформації про замовлення"""
-
+        
         order_id = request.query_params.get("order_id")
         if not order_id:
+
             return rest_response(
                 {"error": "missing parameter 'order_id'"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -51,7 +52,6 @@ class OrderView(APIView):
 
         # user = request.user
         # Якщо незареєстрований користувач
-        # print(type(user))
 
         user = User.objects.get(id=order.user_id)
 
@@ -119,20 +119,16 @@ class OrderView(APIView):
             404: openapi.Response(description="Not Found"),
         },
     )
-
     def post(self, request):
         """Створення замовлення"""
 
-        # print(api_settings.DEFAULT_PARSER_CLASSES)
-
         # Отримання інформації з запиту
         session = request.session
-        # user = request.user
         data = request.data
 
-        # Only for test
+        # Створення нового користувача
         if not data:
-            first_name = "Test" #+str(cart.id)
+            first_name = "Test"
             last_name = "TestTest"
             phone = "111111111"
             email = "test@test.test"
@@ -143,9 +139,8 @@ class OrderView(APIView):
             phone = data["Phone number"]
             email = data["Email"]
             city = data["City"]
-            # address = data["Address"]
 
-        user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email) #, address=Address(city=city))
+        user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email) 
         # user.save()
         address = Address.objects.create(city=city)
         if data["Address"]:
@@ -157,44 +152,30 @@ class OrderView(APIView):
 
         user_address = UserAddress.objects.create(user=user, address=address)
 
+
         # Отримання інформації про кошик
         try:
-            cart = CartAnonymous.objects.get(session_id=session.session_key)
+            cart = CartAnonymous.objects.get(session=session.session_key)
         except CartAnonymous.DoesNotExist:
             return rest_response(
                 {"error": "Basket does not exist"}, status=status.HTTP_404_NOT_FOUND
             )
+
         cart_items = CartAnonymousItem.objects.filter(cart=cart)
-        if sum(item.quantity for item in cart_items) == 0:
+        if not cart_items:
             return rest_response(
-                {"error": "Basket is empty"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"error": "Basket is empty"}, status=status.HTTP_400_BAD_REQUEST
             )
 
+        # Створення замовлення
         order = Order.objects.create(user=user)
-        # order.save()
 
+        # Копіювання товарів з кошика до замовлення
         for item in cart_items:
-            order_item, created = OrderItem.objects.update_or_create(order=order, product=item.product, quantity=item.quantity)
+            order_item = OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
         # order_item.save()
+        # Видалення кошика
         cart.delete()
-
-        # order_items = OrderItem.objects.filter(order=order)
-        # serializer = OrderItemSerializer(order_items, many=True)
-        # serializer_user = OrderUserSerializer(user)
-        # response_data = {
-        #     "message": "Anonymous",
-        #     "session_key": session.session_key,
-        #     "order_id": order.id,
-        #     "user": serializer_user.data,
-        #     "order_items": serializer.data,
-        #     "total_items": sum(item.quantity for item in order_items),
-        #     "total_price": sum(
-        #         item.quantity * item.product.price for item in order_items
-        #     ),
-        # }
-
-        # user = User.objects.get(id=order.user_id)
 
         session = request.session
         order_items = OrderItem.objects.filter(order=order)
@@ -206,6 +187,8 @@ class OrderView(APIView):
         elif order.delivery_method == "Courier":
             delivery_price = COURIER
 
+
+        # Створення відповіді
         response_data = {
             "message": "Anonymous",
             "session_key": session.session_key,
