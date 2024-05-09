@@ -6,7 +6,7 @@ from rest_framework.settings import api_settings
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from .models import Order, OrderItem, User, Address, UserAddress
-from .serializers import OrderItemSerializer, OrderUserSerializer, OrderSerializer
+from .serializers import OrderItemSerializer, OrderUserSerializer, OrderSerializer, OrderAddressSerializer
 from basket.models import CartAnonymous, CartAnonymousItem
 
 NOVA_POSHTA_DELIVERY = 70
@@ -33,10 +33,9 @@ class OrderView(APIView):
     )
     def get(self, request):
         """Отримання інформації про замовлення"""
-        
+
         order_id = request.query_params.get("order_id")
         if not order_id:
-
             return rest_response(
                 {"error": "missing parameter 'order_id'"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -54,11 +53,13 @@ class OrderView(APIView):
         # Якщо незареєстрований користувач
 
         user = User.objects.get(id=order.user_id)
+        address = Address.objects.get(id=order.address_id)
 
         session = request.session
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
         serializer_user = OrderUserSerializer(user)
+        serializer_address = OrderAddressSerializer(address)
         delivery_price = UKR_POSHTA_DELIVERY
         if order.delivery_method == "Nova Poshta":
             delivery_price = NOVA_POSHTA_DELIVERY
@@ -73,6 +74,7 @@ class OrderView(APIView):
             "delivery_method": order.delivery_method,
             "delivery_price": delivery_price,
             "user": serializer_user.data,
+            "address": serializer_address.data,
             "order_items": serializer.data,
             "total_items": sum(item.quantity for item in order_items),
             "total_price": sum(
@@ -140,18 +142,30 @@ class OrderView(APIView):
             email = data["Email"]
             city = data["City"]
 
-        user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email) 
-        # user.save()
+        try:
+            user = User.objects.get(email=email)
+            if user:
+                return rest_response(
+                    {"error": "This email already exists "},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        except User.DoesNotExist:
+            ...
+            # return rest_response(
+            #     {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            # ) 
         address = Address.objects.create(city=city)
+        user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email)
+        # user.save()
+        
         if data["Address"]:
             address.address = data["Address"]
         if data["NP_department"]:
             address.np_department = data["NP_department"]
         if data["UP_department"]:
             address.up_department = data["UP_department"]
-
+        address.save()
         user_address = UserAddress.objects.create(user=user, address=address)
-
 
         # Отримання інформації про кошик
         try:
@@ -168,7 +182,8 @@ class OrderView(APIView):
             )
 
         # Створення замовлення
-        order = Order.objects.create(user=user)
+        order = Order.objects.create(user=user, address=address)
+        print(order.address)
 
         # Копіювання товарів з кошика до замовлення
         for item in cart_items:
@@ -177,16 +192,16 @@ class OrderView(APIView):
         # Видалення кошика
         cart.delete()
 
-        session = request.session
+        # session = request.session
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
         serializer_user = OrderUserSerializer(user)
+        serializer_address = OrderAddressSerializer(address)
         delivery_price = UKR_POSHTA_DELIVERY
         if order.delivery_method == "Nova Poshta":
             delivery_price = NOVA_POSHTA_DELIVERY
         elif order.delivery_method == "Courier":
             delivery_price = COURIER
-
 
         # Створення відповіді
         response_data = {
@@ -197,6 +212,7 @@ class OrderView(APIView):
             "delivery_method": order.delivery_method,
             "delivery_price": delivery_price,
             "user": serializer_user.data,
+            "address": serializer_address.data,
             "order_items": serializer.data,
             "total_items": sum(item.quantity for item in order_items),
             "total_price": sum(
