@@ -5,13 +5,13 @@ from django.db import models
 from django.contrib.sessions.models import Session
 from products.models import Product
 
-DELIVERY_METHODS = [('Nova Poshta', 1), ('Ukr Poshta', 2), ('Courier', 3)]
-ORDER_STATUS = [("IN", "In the works"), ("SN", "Sent"), ("RC", "Received"), ("CL", "Closed")]
+DELIVERY_METHODS = [('Nova_Poshta', 1), ('Ukr_Poshta', 2), ('Courier', 3)]
+ORDER_STATUS = [("IN", "In_the_works"), ("SN", "Sent"), ("RC", "Received"), ("CL", "Closed")]
 PAYMENT_METHOD = [
-    ("card online", 1),
-    ("Google Pay", 2),
-    ("Apple Pay", 3),
-    ("upon receipt", 4),
+    ("card_online", 1),
+    ("Google_Pay", 2),
+    ("Apple_Pay", 3),
+    ("upon_receipt", 4),
 ]
 CITY = [
     ("Simferopol", 1),
@@ -34,11 +34,12 @@ CITY = [
     ("Sumy", 18),
     ("Ternopil", 19),
     ("Kharkiv", 20),
-    ("Khmelnytskyi", 21),
-    ("Cherkasy", 22),
-    ("Chernivtsі", 23),
-    ("Chernihiv", 24),
-    ("Sevastopol", 25)
+    ("Kherson", 21),
+    ("Khmelnytskyi", 22),
+    ("Cherkasy", 23),
+    ("Chernivtsi", 24),
+    ("Chernihiv", 25),
+    ("Sevastopol", 26),
 ]
 
 class Address(models.Model):
@@ -64,7 +65,7 @@ class UserAddress(models.Model):
 
 
 class Order(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #, null=True, blank=True)
     products = models.ManyToManyField(Product, through="OrderItem")
     address = models.OneToOneField(
         Address, on_delete=models.CASCADE, null=True, blank=True

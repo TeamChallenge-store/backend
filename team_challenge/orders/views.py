@@ -20,11 +20,14 @@ class OrderView(APIView):
         "order_id", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER
     )
 
+    email = openapi.Parameter(
+        "email", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
+
     @swagger_auto_schema(
         operation_description="specify the order number as 'order_id' to be showed",
             # '\n'\
             # SHIP_METHODS = [('NP', 'Nova Poshta'), ('UP', 'Ukr Poshta'), ('CR', 'Courier')]",
-        manual_parameters=[order_id],
+        manual_parameters=[order_id, email],
         responses={
             200: openapi.Response(description="Success", schema=OrderSerializer()),
             400: openapi.Response(description="Bad Request"),
@@ -41,6 +44,13 @@ class OrderView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        email = request.query_params.get("email")
+        if not email:
+            return rest_response(
+                {"error": "missing parameter 'email'"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         try:
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
@@ -53,22 +63,30 @@ class OrderView(APIView):
         # Якщо незареєстрований користувач
 
         user = User.objects.get(id=order.user_id)
+
+        if not email == user.email:
+            return rest_response(
+                {"error": f"This {email} have not order number {order_id}"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         address = Address.objects.get(id=order.address_id)
 
-        session = request.session
+        # session = request.session
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
         serializer_user = OrderUserSerializer(user)
         serializer_address = OrderAddressSerializer(address)
+        # ціна доставки
         delivery_price = UKR_POSHTA_DELIVERY
-        if order.delivery_method == "Nova Poshta":
+        if order.delivery_method == "Nova_Poshta":
             delivery_price = NOVA_POSHTA_DELIVERY
         elif order.delivery_method == "Courier":
             delivery_price = COURIER
 
         response_data = {
             "message": "Anonymous",
-            "session_key": session.session_key,
+            # "session_key": session.session_key,
             "order_id": order.id,
             "time_create": order.time_create,
             "delivery_method": order.delivery_method,
@@ -103,16 +121,16 @@ class OrderView(APIView):
             },
             # enum=['1','2','3','4']
             example={
-                "First Name": "Olexa",
-                "Last Name": "Dovbush",
-                "Phone number": "098765432",
-                "Email": "example@test.ua",
-                "City": "Ternopil",
-                "Address": "Test_example",
-                "NP_department": "3",
-                "UP_department": "22222",
-                "Delivery_method": "Ukr Poshta",
-                "Payment_method": "card online",
+                "first_name": "Olexa",
+                "last_name": "Dovbush",
+                "phone_number": "098765432",
+                "email": "example@test.ua",
+                "city": "Ternopil",
+                "address": "Test_example",
+                "department_NP": "3",
+                "department_UP": "22222",
+                "delivery_method": "Ukr_Poshta",
+                "payment_method": "card_online",
             },
         ),
         responses={
@@ -128,45 +146,6 @@ class OrderView(APIView):
         session = request.session
         data = request.data
 
-        # Створення нового користувача
-        if not data:
-            first_name = "Test"
-            last_name = "TestTest"
-            phone = "111111111"
-            email = "test@test.test"
-            city = "Kyiv"
-        else:
-            first_name = data["First Name"]
-            last_name = data["Last Name"]
-            phone = data["Phone number"]
-            email = data["Email"]
-            city = data["City"]
-
-        try:
-            user = User.objects.get(email=email)
-            if user:
-                return rest_response(
-                    {"error": "This email already exists "},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except User.DoesNotExist:
-            ...
-            # return rest_response(
-            #     {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-            # ) 
-        address = Address.objects.create(city=city)
-        user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email)
-        # user.save()
-        
-        if data["Address"]:
-            address.address = data["Address"]
-        if data["NP_department"]:
-            address.np_department = data["NP_department"]
-        if data["UP_department"]:
-            address.up_department = data["UP_department"]
-        address.save()
-        user_address = UserAddress.objects.create(user=user, address=address)
-
         # Отримання інформації про кошик
         try:
             cart = CartAnonymous.objects.get(session=session.session_key)
@@ -181,9 +160,58 @@ class OrderView(APIView):
                 {"error": "Basket is empty"}, status=status.HTTP_400_BAD_REQUEST
             )
 
+        # Створення нового користувача або пошук в базі
+        if not data:
+            first_name = "Test"
+            last_name = "TestTest"
+            phone = "111111111"
+            email = "test@test.test"
+            city = "Kyiv"
+        else:
+            first_name = data.get("first_name")
+            last_name = data.get("last_name")
+            phone = data.get("phone_number")
+            email = data.get("email")
+            city = data.get("city")
+
+        if 0==len(first_name)*len(last_name)*len(phone)*len(email)*len(city):
+            return rest_response(
+                {"error": "some fields is empty"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            user = User.objects.get(email=email)
+            # if user:
+            #     ...
+            # return rest_response(
+            #     {"error": "This email already exists "},
+            #     status=status.HTTP_400_BAD_REQUEST,
+            # )
+        except:
+            user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email)
+            # return rest_response(
+            #     {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            # )
+        
+        #Створення адреси або пошук в базі
+        # addresses = Address.objects.all().filter(city=city)
+        address = Address.objects.create(city=city)
+
+        address.address = data.get("address")
+        address.np_department = data.get("department_NP")
+        address.up_department = data.get("department_UP")
+        address.save()
+        user_address = UserAddress.objects.create(user=user, address=address)
+
         # Створення замовлення
-        order = Order.objects.create(user=user, address=address)
-        print(order.address)
+        order = Order.objects.create(
+            user=user,
+            address=address,
+            delivery_method=data.get("delivery_method"),
+            payment_method=data.get("payment_method"),
+        )
+        # print(order.address)
 
         # Копіювання товарів з кошика до замовлення
         for item in cart_items:
@@ -209,6 +237,7 @@ class OrderView(APIView):
             "session_key": session.session_key,
             "order_id": order.id,
             "time_create": order.time_create,
+            "payment_method": order.payment_method,
             "delivery_method": order.delivery_method,
             "delivery_price": delivery_price,
             "user": serializer_user.data,
