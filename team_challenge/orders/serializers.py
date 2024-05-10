@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import OrderItem, User, Order, Address
 
 
-
 class OrderUserSerializer(serializers.ModelSerializer):
 #     first_name = serializers.ReadOnlyField(source="user.first_name")
 #     last_name = serializers.ReadOnlyField(source="user.last_name")
@@ -22,6 +21,7 @@ class OrderUserSerializer(serializers.ModelSerializer):
 
 
 class OrderAddressSerializer(serializers.ModelSerializer):
+    # city = serializers.ReadOnlyField(source="address.city")
 
     class Meta:
         model = Address
@@ -42,6 +42,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderItem
+        # fields = "__all__"
         fields = [
             "id",
             "product_id",
