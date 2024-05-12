@@ -126,7 +126,12 @@ class OrderView(APIView):
                 "phone_number": "098765432",
                 "email": "example@test.ua",
                 "city": "Ternopil",
-                "address": "Test_example",
+                "address": {
+                    "streetName": "string",
+                    "houseNumber": "string",
+                    "sectionNumber": "string",
+                    "apartmentNumber": "string",
+                },
                 "department_NP": "3",
                 "department_UP": "22222",
                 "delivery_method": "Ukr_Poshta",
@@ -193,8 +198,8 @@ class OrderView(APIView):
             # return rest_response(
             #     {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
             # )
-        
-        #Створення адреси або пошук в базі
+
+        # Створення адреси або пошук в базі
         # addresses = Address.objects.all().filter(city=city)
         address = Address.objects.create(city=city)
 
@@ -226,7 +231,7 @@ class OrderView(APIView):
         serializer_user = OrderUserSerializer(user)
         serializer_address = OrderAddressSerializer(address)
         delivery_price = UKR_POSHTA_DELIVERY
-        if order.delivery_method == "Nova Poshta":
+        if order.delivery_method == "Nova_Poshta":
             delivery_price = NOVA_POSHTA_DELIVERY
         elif order.delivery_method == "Courier":
             delivery_price = COURIER
