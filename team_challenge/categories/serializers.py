@@ -3,10 +3,12 @@ from .models import Category, Subcategory
 from products.models import Product
 from products.serializers import ProductListSerializer
 
+
 class SubcategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Subcategory
         fields = ('id', 'slug', 'parent_category_id', 'name', 'image')
+
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubcategorySerializer(source='subcategory_set', many=True)

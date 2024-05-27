@@ -45,7 +45,7 @@ class CategoryDetail(APIView):
     def get(self, request, category_slug=None):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
-        products = Product.objects.filter(category=category)
+        products = Product.objects.filter(category=category).order_by('id')
 
         # Sorting and search
         search_query = request.query_params.get('search', None)

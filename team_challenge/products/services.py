@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from .serializers import ProductListSerializer
 from .models import Product
 
+
 def paginate_product_list(products, request):
 
     class CustomPageNumberPagination(PageNumberPagination):
