@@ -11,6 +11,8 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    networks:
+      - my_network
 
   flower:
     build:
@@ -27,6 +29,8 @@ services:
       - redis
     ports:
       - "5555:5555"
+    networks:
+      - my_network
 
   worker:
     build:
@@ -39,12 +43,16 @@ services:
       - ./team_challenge:/team_challenge
     depends_on:
       - redis
+    networks:
+      - my_network
 
   redis:
     image: redis:7.2.4-alpine
     container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - my_network
 
   prometheus:
     image: prom/prometheus:latest
@@ -57,6 +65,8 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - node-exporter
+    networks:
+      - my_network
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -64,6 +74,8 @@ services:
     restart: unless-stopped
     expose:
       - 9100
+    networks:
+      - my_network
 
   grafana:
     image: grafana/grafana
@@ -75,3 +87,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
     depends_on:
       - prometheus
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    external: true
