@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: example_my_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+    env_file:
+      - ../.env_production
+
+volumes:
+  postgres_data:

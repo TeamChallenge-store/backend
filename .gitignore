@@ -2,5 +2,6 @@ venv/
 __pycache__/
 .idea/
 db.sqlite3
-team_challenge/.env_production
-team_challenge/rest_test.json
+.env_production
+rest_test.json
+core/config/settings/local.py
