@@ -1,9 +1,11 @@
 from collections import OrderedDict
+
 from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 
+
 class CustomPageNumberPagination(PageNumberPagination):
-    """Пагінація"""
+    """Пагінація."""
     page_size = 12
     page_size_query_param = 'page_size'
     max_page_size = 100
@@ -25,15 +27,17 @@ class CustomPageNumberPagination(PageNumberPagination):
         ])
         return response
 
+
 def filter_products(products, search_query=None):
-    """Пошук продуктів"""
+    """Пошук продуктів."""
 
     if search_query:
         products = products.filter(Q(name__icontains=search_query) | Q(brand__name__icontains=search_query))
     return products
 
+
 def sort_products(products, sort_option):
-    """Сортування продуктів"""
+    """Сортування продуктів."""
 
     if sort_option == 'price_up':
         return products.order_by('price')

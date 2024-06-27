@@ -1,7 +1,14 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from core.apps.categories.factories import CategoryFactory, SubcategoryFactory, BrandFactory, ColorFactory, ProductFactory
+
+from core.apps.categories.factories import (
+    BrandFactory,
+    CategoryFactory,
+    ColorFactory,
+    ProductFactory,
+    SubcategoryFactory,
+)
 
 
 class CategoryListTests(APITestCase):
@@ -14,7 +21,7 @@ class CategoryListTests(APITestCase):
             category=self.category,
             subcategory=self.subcategory,
             brand=self.brand,
-            color=self.color
+            color=self.color,
         )
 
     def test_get(self):

@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import Category, Subcategory
+
 from core.apps.products.models import Product
 from core.apps.products.serializers import ProductListSerializer
+
+from .models import (
+    Category,
+    Subcategory,
+)
 
 
 class SubcategorySerializer(serializers.ModelSerializer):

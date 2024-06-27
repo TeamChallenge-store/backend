@@ -5,19 +5,12 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-RUN apk update && \
-    apk add --no-cache python3-dev \
-                       gcc \
-                       musl-dev \
-                       libpq-dev \
-                       nmap
-
 ADD pyproject.toml /app/
 
 RUN pip install --upgrade pip && \
     pip install poetry && \
     poetry config virtualenvs.create false && \
-    poetry install --no-root --no-interaction --no-ansi
+    poetry install --no-root --no-interaction --no-ansi --no-dev
 
 COPY . /app/
 

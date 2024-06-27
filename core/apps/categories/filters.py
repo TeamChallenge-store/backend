@@ -1,4 +1,5 @@
 import django_filters
+
 from core.apps.products.models import Product
 
 

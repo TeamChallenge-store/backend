@@ -1,26 +1,36 @@
 from django.http import Http404
-
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
-from core.apps.products.serializers import ProductListSerializer
 from core.apps.products.models import Product
-from .models import Category, Subcategory
-from .services import CustomPageNumberPagination, filter_products, sort_products
-from .serializers import CategorySerializer, SubcategorySerializer
+from core.apps.products.serializers import ProductListSerializer
+
 from .filters import ProductFilter
+from .models import (
+    Category,
+    Subcategory,
+)
+from .serializers import (
+    CategorySerializer,
+    SubcategorySerializer,
+)
+from .services import (
+    CustomPageNumberPagination,
+    filter_products,
+    sort_products,
+)
 
 
 class CategoryList(APIView):
-    """Список категорій"""
+    """Список категорій."""
 
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success'),
-        }
+        },
     )
     def get(self, request):
         categories = Category.objects.all()
@@ -29,7 +39,7 @@ class CategoryList(APIView):
 
 
 class CategoryDetail(APIView):
-    """Перехід на певну категорію"""
+    """Перехід на певну категорію."""
 
     def get_object(self, category_slug):
         try:
@@ -40,7 +50,7 @@ class CategoryDetail(APIView):
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success', schema=CategorySerializer),
-        }
+        },
     )
     def get(self, request, category_slug=None):
         category = self.get_object(category_slug)
@@ -71,7 +81,7 @@ class CategoryDetail(APIView):
 
 
 class SubcategoryDetail(APIView):
-    """Перехід на підкатегорію"""
+    """Перехід на підкатегорію."""
 
     def get_object(self, category_slug, subcategory_slug):
         try:
@@ -84,7 +94,7 @@ class SubcategoryDetail(APIView):
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success', schema=SubcategorySerializer),
-        }
+        },
     )
     def get(self, request, category_slug, subcategory_slug):
         subcategory = self.get_object(category_slug, subcategory_slug)

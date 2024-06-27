@@ -2,8 +2,15 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from rest_framework.views import status
 
-from core.apps.categories.factories import CategoryFactory, SubcategoryFactory
-from core.apps.categories.views import CategoryList, CategoryDetail, SubcategoryDetail
+from core.apps.categories.factories import (
+    CategoryFactory,
+    SubcategoryFactory,
+)
+from core.apps.categories.views import (
+    CategoryDetail,
+    CategoryList,
+    SubcategoryDetail,
+)
 
 
 class CategoryAPITest(TestCase):

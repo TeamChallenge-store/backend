@@ -1,17 +1,22 @@
 from rest_framework import serializers
-from .models import Product, Brand, Color
+
+from .models import (
+    Brand,
+    Color,
+    Product,
+)
 
 
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
-        fields = ['name']
+        fields = ['id', 'name', 'created_at', 'updated_at']
 
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
-        fields = ['name']
+        fields = ['name', 'created_at', 'updated_at']
 
 
 class ProductListSerializer(serializers.ModelSerializer):
@@ -21,8 +26,10 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'category', 'subcategory', 'name', 'price', 'old_price', 'image', 'quantity_in_stock', 'brand',
-                  'color', 'rate', 'subtitle', 'subscription', 'features', '_links']
+        fields = [
+            'id', 'category', 'subcategory', 'name', 'price', 'old_price', 'image', 'quantity_in_stock', 'brand',
+            'color', 'rate', 'subtitle', 'subscription', 'features', 'created_at', 'updated_at', '_links',
+        ]
 
     def get__links(self, obj):
         request = self.context.get('request')
@@ -32,8 +39,8 @@ class ProductListSerializer(serializers.ModelSerializer):
             return {
                 "self": {
                     "href": href,
-                    "title": f"Get product item page for product {product_id}"
-                }
+                    "title": f"Get product item page for product {product_id}",
+                },
             }
         return None
 

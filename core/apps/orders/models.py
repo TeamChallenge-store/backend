@@ -1,8 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
-from django.contrib.sessions.models import Session
 from core.apps.products.models import Product
 
 
@@ -41,7 +38,7 @@ class Address(models.Model):
             'streetName': 'string',
             'houseNumber': 'string',
             'sectionNumber': 'string',
-            'apartmentNumber': 'string'
+            'apartmentNumber': 'string',
         }
 
     city = models.CharField(max_length=15, choices=CITY, default="Kyiv")
@@ -61,7 +58,7 @@ class User(models.Model):
     email = models.EmailField(max_length=64)
     address = models.ManyToManyField(Address, through="UserAddress")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.first_name + ' ' + self.last_name
 
 
@@ -82,14 +79,14 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  #, null=True, blank=True)
     products = models.ManyToManyField(Product, through="OrderItem")
     address = models.OneToOneField(
-        Address, on_delete=models.CASCADE, null=True, blank=True
+        Address, on_delete=models.CASCADE, null=True, blank=True,
     )
     time_create = models.DateTimeField(auto_now_add=True)
     delivery_method = models.CharField(
-        max_length=11, choices=DELIVERY_METHODS, default="Ukr_Poshta"
+        max_length=11, choices=DELIVERY_METHODS, default="Ukr_Poshta",
     )
     payment_method = models.CharField(
-        max_length=12, choices=PAYMENT_METHOD, default="upon_receipt"
+        max_length=12, choices=PAYMENT_METHOD, default="upon_receipt",
     )
     payment = models.BooleanField(default=False)
     status = models.CharField(max_length=2, choices=ORDER_STATUS, default="IN")

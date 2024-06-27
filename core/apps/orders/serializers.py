@@ -1,13 +1,14 @@
 from rest_framework import serializers
-from .models import OrderItem, User, Order, Address
+
+from .models import (
+    Address,
+    Order,
+    OrderItem,
+    User,
+)
 
 
 class OrderUserSerializer(serializers.ModelSerializer):
-#     first_name = serializers.ReadOnlyField(source="user.first_name")
-#     last_name = serializers.ReadOnlyField(source="user.last_name")
-#     phone = serializers.ReadOnlyField(source="user.phone")
-#     email = serializers.ReadOnlyField(source="user.email")
-#     address = serializers.ReadOnlyField(source="user.address")
 
     class Meta:
         model = User

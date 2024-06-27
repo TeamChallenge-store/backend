@@ -1,22 +1,39 @@
-from rest_framework.views import APIView
+from rest_framework import (
+    status,
+    viewsets,
+)
 from rest_framework.response import Response as responce
-from rest_framework import status
-from .serializers import ProductDetailSerializer
-from .services import *
+from rest_framework.views import APIView
+
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+
 from core.apps.categories.services import filter_products
+
+from .models import (
+    Brand,
+    Product,
+)
+from .serializers import (
+    BrandSerializer,
+    ProductDetailSerializer,
+    ProductListSerializer,
+)
+from .services import (
+    filter_price_products,
+    paginate_product_list,
+)
 
 
 class ProductListView(APIView):
-    """"Вивід списку продуктів"""
+    """"Вивід списку продуктів."""
 
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success', schema=ProductListSerializer(many=True)),
             400: openapi.Response(description='Bad Request'),
-            404: openapi.Response(description='Not Found')
-        }
+            404: openapi.Response(description='Not Found'),
+        },
     )
     def get(self, request):
         min_price = request.query_params.get('min_price', None)
@@ -40,18 +57,23 @@ class ProductListView(APIView):
 
 
 class ProductDetailView(APIView):
-    """Деталі продукту"""
+    """Деталі продукту."""
 
     @swagger_auto_schema(
         responses={
             200: openapi.Response(description='Success', schema=ProductDetailSerializer()),
-            404: openapi.Response(description='Not Found')
-        }
+            404: openapi.Response(description='Not Found'),
+        },
     )
-    def get(self, request, product_id, format=None):
+    def get(self, request, product_id):
         try:
             product = Product.objects.get(pk=product_id)
             serializer = ProductDetailSerializer(product)
             return responce(serializer.data, status=status.HTTP_200_OK)
         except Product.DoesNotExist:
             return responce({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class BrandListView(viewsets.ReadOnlyModelViewSet):
+    queryset = Brand.objects.all()
+    serializer_class = BrandSerializer

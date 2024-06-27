@@ -1,5 +1,6 @@
 DC = docker-compose
 STORAGES_FILE = docker_compose\storages.yml
+PRODUCTION_FILE = docker_compose\docker-compose.yml
 EXEC = docker exec -it
 DB_CONTAINER = example-db
 LOGS = docker logs
@@ -8,6 +9,10 @@ APP_FILE = docker_compose/app.yaml
 APP_CONTAINER = main-app
 MANAGE_PY = python manage.py
 MONITORING_FILE = docker_compose/monitoring.yaml
+
+.PHONY: up
+up:
+	${DC} -f ${PRODUCTION_FILE} up -d
 
 .PHONY: storages
 storages:

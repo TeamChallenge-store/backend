@@ -1,32 +1,38 @@
 from django.contrib.auth.models import AnonymousUser
-from rest_framework.views import APIView
-from rest_framework.response import Response as rest_response
 from rest_framework import status
-from .models import Product, Cart, CartItem, CartAnonymous, CartAnonymousItem
-from .serializers import CartItemSerializer, CartAnonymousItemSerializer
-# from products.services import *
-from .services import *
+from rest_framework.response import Response as rest_response
+from rest_framework.views import APIView
 
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
+from .models import (
+    Cart,
+    CartAnonymous,
+    CartAnonymousItem,
+    CartItem,
+    Product,
+)
+from .serializers import (
+    CartAnonymousItemSerializer,
+    CartItemSerializer,
+)
+from .services import *
 
 
 class CartView(APIView):
-    """Операції з кошиком"""
+    """Операції з кошиком."""
 
     @swagger_auto_schema(
         responses={
             200: openapi.Response(
                 description="Success", 
-                schema=CartAnonymousItemSerializer(many=True)
+                schema=CartAnonymousItemSerializer(many=True),
             ),
-            # 200: openapi.Response(
-            #     description="Success", schema=CartItemSerializer(many=True)
-            # ),
-        }
+        },
     )
     def get(self, request):
-        """Отримання інформації про кошик"""
+        """Отримання інформації про кошик."""
 
         # Отримання або створення кошика користувача
         user = request.user
@@ -39,11 +45,10 @@ class CartView(APIView):
             session = request.session
 
             cart, created = CartAnonymous.objects.get_or_create(
-                session_id=session.session_key
+                session_id=session.session_key,
             )
             cart_items = CartAnonymousItem.objects.filter(cart=cart)
             serializer = CartAnonymousItemSerializer(cart_items, many=True)
-            # serializer = ProductListSerializer(cart_items, many=True)
 
             response_data = {"message": "Anonymous"}
 
@@ -67,12 +72,13 @@ class CartView(APIView):
     @swagger_auto_schema(
         responses={
             204: openapi.Response(
-                description="Delete Success"),
+                description="Delete Success",
+            ),
             404: openapi.Response(description="Not Found"),
-        }
+        },
     )
     def delete(self, request):
-        """Очищення кошика"""
+        """Очищення кошика."""
 
         user = request.user
 
@@ -83,7 +89,7 @@ class CartView(APIView):
                 cart = CartAnonymous.objects.get(session_id=session.session_key)
             except CartAnonymous.DoesNotExist:
                 return rest_response(
-                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
+                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND,
                 )
         # Зареєстрований користувач
         else:
@@ -91,21 +97,23 @@ class CartView(APIView):
                 cart = Cart.objects.get(user=user)
             except Cart.DoesNotExist:
                 return rest_response(
-                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
+                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND,
                 )
 
         cart.delete()
         return rest_response({"success": "Cart delete"}, status=status.HTTP_200_OK)
 
-    pk = openapi.Parameter('pk', in_=openapi.IN_QUERY,
-                           type=openapi.TYPE_INTEGER)
+    pk = openapi.Parameter(
+        'pk', in_=openapi.IN_QUERY,
+        type=openapi.TYPE_INTEGER,
+    )
 
     @swagger_auto_schema(
         operation_description="specify the product number as 'pk' to be deleted",
         manual_parameters=[pk],
         responses={
             200: openapi.Response(
-                description="Success", schema=CartItemSerializer(many=True)
+                description="Success", schema=CartItemSerializer(many=True),
             ),
             204: openapi.Response(description="No Content"),
             400: openapi.Response(description="Bad Request"),
@@ -113,19 +121,19 @@ class CartView(APIView):
         },
     )
     def patch(self, request):
-        """Видалення товару з кошика"""
+        """Видалення товару з кошика."""
 
         pk = request.query_params.get("pk")
         if not pk:
             return rest_response(
-                {"error": "missing parameter 'pk'"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "missing parameter 'pk'"}, status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
             product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
             return rest_response(
-                {"error": "Product not found"}, status.HTTP_404_NOT_FOUND
+                {"error": "Product not found"}, status.HTTP_404_NOT_FOUND,
             )
 
         # Отримання кошика користувача
@@ -138,7 +146,7 @@ class CartView(APIView):
                 cart = CartAnonymous.objects.get(session_id=session.session_key)
             except CartAnonymous.DoesNotExist:
                 return rest_response(
-                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
+                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND,
                 )
             cart_items = CartAnonymousItem.objects.filter(cart=cart)
             serializer = CartAnonymousItemSerializer(cart_items, many=True)
@@ -157,7 +165,7 @@ class CartView(APIView):
                 cart = Cart.objects.get(user=user)
             except Cart.DoesNotExist:
                 return rest_response(
-                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND
+                    {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND,
                 )
 
             # Видалення товару з кошика
@@ -177,7 +185,7 @@ class CartView(APIView):
         cart_item.delete()
 
         response_data.update(
-            {"success": "Product '" + str(product.name) + "' removed from cart"}
+            {"success": "Product '" + str(product.name) + "' removed from cart"},
         )
 
         response_data = show_cart(request, serializer, response_data, cart_items)
@@ -187,7 +195,7 @@ class CartView(APIView):
         )
 
     quantity = openapi.Parameter(
-        "quantity", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER
+        "quantity", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER,
     )
 
     @swagger_auto_schema(
@@ -196,7 +204,7 @@ class CartView(APIView):
         manual_parameters=[pk, quantity],
         responses={
             201: openapi.Response(
-                description="Create", schema=CartItemSerializer(many=True)
+                description="Create", schema=CartItemSerializer(many=True),
             ),
             200: openapi.Response(
                 description="Product removed from cart",
@@ -211,13 +219,13 @@ class CartView(APIView):
         },
     )
     def post(self, request):  # , pk, quantity
-        """Додавання товару до кошика"""
+        """Додавання товару до кошика."""
 
         # Отримання інформації про товар
         pk = request.query_params.get("pk")
         if not pk:
             return rest_response(
-                {"error": "missing parameter 'pk'"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "missing parameter 'pk'"}, status=status.HTTP_400_BAD_REQUEST,
             )
         quantity = request.query_params.get("quantity")
         if not quantity:
@@ -230,7 +238,7 @@ class CartView(APIView):
             product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
             return rest_response(
-                {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND,
             )
 
         # Отримання або створення кошика користувача
@@ -244,10 +252,10 @@ class CartView(APIView):
             session = request.session
 
             cart, created = CartAnonymous.objects.get_or_create(
-                session_id=session.session_key
+                session_id=session.session_key,
             )
             cart_item, created = CartAnonymousItem.objects.get_or_create(
-                cart=cart, product=product
+                cart=cart, product=product,
             )
             response_data = {"message": "Anonymous"}
 
@@ -257,7 +265,7 @@ class CartView(APIView):
 
             # Отримання або створення елемента кошика для вказаного товару
             cart_item, created = CartItem.objects.get_or_create(
-                cart=cart, product=product
+                cart=cart, product=product,
             )
             response_data = {"message": user.first_name}
 
@@ -268,7 +276,7 @@ class CartView(APIView):
             response_data.update({
                 "success": "Product '"
                            + str(product.name)
-                           + "' removed from cart"
+                           + "' removed from cart",
             })
 
         # додавання товару до кошика, якщо кількість != 0
@@ -297,10 +305,4 @@ class CartView(APIView):
         return rest_response(
             response_data,
             status=status1,
-            # status=(
-            #     status.HTTP_200_OK if int(quantity) == 0
-            #     # if created: ???
-            #     else status.HTTP_201_CREATED
-            # ),
-
         )

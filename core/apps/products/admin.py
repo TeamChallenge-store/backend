@@ -1,6 +1,12 @@
 from django.contrib import admin
-from .models import Brand, Color, Product
+
 from import_export.admin import ImportExportModelAdmin
+
+from .models import (
+    Brand,
+    Color,
+    Product,
+)
 
 
 class FormModel(ImportExportModelAdmin, admin.ModelAdmin):

@@ -1,26 +1,36 @@
 from django.db import models
-from core.apps.categories.models import Category, Subcategory
-from django.utils import timezone
+
+from core.apps.categories.models import (
+    Category,
+    Subcategory,
+)
+from core.apps.common.models import TimedBaseModel
 
 
-class Brand(models.Model):
-    id = models.AutoField(primary_key=True)
+class Brand(TimedBaseModel):
+    id = models.AutoField(primary_key=True) #noqa
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Бренд'
 
-class Color(models.Model):
-    id = models.AutoField(primary_key=True)
+
+class Color(TimedBaseModel):
+    id = models.AutoField(primary_key=True) #noqa
     name = models.CharField(max_length=255)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Колір'
 
-class Product(models.Model):
+
+class Product(TimedBaseModel):
     name = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
@@ -32,10 +42,14 @@ class Product(models.Model):
     quantity_in_stock = models.IntegerField()
     rate = models.IntegerField(default=0)
     color = models.ForeignKey(Color, on_delete=models.CASCADE, blank=True, null=True)
-    date = models.DateTimeField(default=timezone.now, auto_now_add=False)
     subtitle = models.CharField(max_length=255)
     subscription = models.CharField(max_length=255)
     features = models.CharField(max_length=255)
+    is_visible = models.BooleanField(default=True, verbose_name='Відображення продукту в каталозі')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
+
+    class Meta:
+        verbose_name = "Продукт"
+        verbose_name_plural = 'Продукти'

@@ -1,12 +1,15 @@
-from django.db import models
-from django.contrib.sessions.models import Session
-from core.apps.products.models import Product
 from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.db import models
+
+from core.apps.products.models import Product
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
-                                blank=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
+        blank=True,
+    )
     products = models.ManyToManyField(Product, through='CartItem')
 
 
@@ -18,7 +21,7 @@ class CartItem(models.Model):
 
 class CartAnonymous(models.Model):
     session = models.OneToOneField(
-        Session, on_delete=models.CASCADE, null=True, blank=True, default=None
+        Session, on_delete=models.CASCADE, null=True, blank=True, default=None,
     )
     products = models.ManyToManyField(Product, through="CartAnonymousItem")
     time_create = models.DateTimeField(auto_now_add=True)

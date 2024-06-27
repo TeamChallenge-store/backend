@@ -1,9 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager,
     AbstractBaseUser,
-    PermissionsMixin
+    BaseUserManager,
+    PermissionsMixin,
 )
+from django.db import models
 
 
 class UserAccountManager(BaseUserManager):
@@ -16,7 +16,7 @@ class UserAccountManager(BaseUserManager):
 
         user = self.model(
             email=email,
-            **kwargs
+            **kwargs,
         )
 
         user.set_password(password)
@@ -28,7 +28,7 @@ class UserAccountManager(BaseUserManager):
         user = self.create_user(
             email,
             password=password,
-            **kwargs
+            **kwargs,
         )
 
         user.is_staff = True
@@ -52,5 +52,5 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.email

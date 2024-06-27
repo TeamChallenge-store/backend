@@ -1,8 +1,18 @@
-import factory
-from django.utils.text import slugify
-from .models import Category, Subcategory
-from core.apps.products.models import Product, Brand, Color
 from django.utils import timezone
+from django.utils.text import slugify
+
+import factory
+
+from core.apps.products.models import (
+    Brand,
+    Color,
+    Product,
+)
+
+from .models import (
+    Category,
+    Subcategory,
+)
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):

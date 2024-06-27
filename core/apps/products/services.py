@@ -1,9 +1,10 @@
-from collections import OrderedDict
 import random
-from requests import Response
+from collections import OrderedDict
+
 from rest_framework.pagination import PageNumberPagination
-from .serializers import ProductListSerializer
+
 from .models import Product
+from .serializers import ProductListSerializer
 
 
 def paginate_product_list(products, request):
@@ -42,8 +43,9 @@ def paginate_product_list(products, request):
 
     return paginated_data
 
+
 def filter_price_products(min_price, max_price):
-    """Фільтрація за ціною"""
+    """Фільтрація за ціною."""
     products = Product.objects.all()
 
     if min_price is not None:
@@ -54,8 +56,9 @@ def filter_price_products(min_price, max_price):
 
     return products
 
+
 def sort_price_up(category):
-    """Сортування за зростанням ціни"""
+    """Сортування за зростанням ціни."""
     products = Product.objects.all()
 
     if category is not None:
@@ -65,7 +68,7 @@ def sort_price_up(category):
 
 
 def sort_price_down(category):
-    """Сортування за спаданням ціни"""
+    """Сортування за спаданням ціни."""
     products = Product.objects.all()
 
     if category is not None:
@@ -74,7 +77,7 @@ def sort_price_down(category):
 
 
 def sort_rate(category):
-    """Сортування за рейтингом"""
+    """Сортування за рейтингом."""
     products = Product.objects.all()
 
     if category is not None:
@@ -84,7 +87,7 @@ def sort_rate(category):
 
 
 def make_rate():
-    """Випдковий(рандомний) рейтинг для товарів иід 1 до 99"""
+    """Випдковий(рандомний) рейтинг для товарів иід 1 до 99."""
     products = Product.objects.all().filter(rate=0)
     if products:
         for product in products:

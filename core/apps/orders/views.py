@@ -1,27 +1,45 @@
-from django.contrib.auth.models import AnonymousUser
 from rest_framework import status
 from rest_framework.response import Response as rest_response
 from rest_framework.views import APIView
-from rest_framework.settings import api_settings
+
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from .models import Order, OrderItem, User, Address, UserAddress
-from .serializers import OrderItemSerializer, OrderUserSerializer, OrderSerializer, OrderAddressSerializer
-from core.apps.basket.models import CartAnonymous, CartAnonymousItem
+
+from core.apps.basket.models import (
+    CartAnonymous,
+    CartAnonymousItem,
+)
+
+from .models import (
+    Address,
+    Order,
+    OrderItem,
+    User,
+    UserAddress,
+)
+from .serializers import (
+    OrderAddressSerializer,
+    OrderItemSerializer,
+    OrderSerializer,
+    OrderUserSerializer,
+)
+
 
 NOVA_POSHTA_DELIVERY = 70
 UKR_POSHTA_DELIVERY = 70
 COURIER = 150
 
+
 class OrderView(APIView):
-    """Операції з замовленням"""
+    """Операції з замовленням."""
 
     order_id = openapi.Parameter(
-        "order_id", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER
+        "order_id", in_=openapi.IN_QUERY, type=openapi.TYPE_INTEGER,
     )
 
     email = openapi.Parameter(
-        "email", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING)
+        "email", in_=openapi.IN_QUERY, type=openapi.TYPE_STRING,
+    )
 
     @swagger_auto_schema(
         operation_description="specify the order number as 'order_id' to be showed",
@@ -35,7 +53,7 @@ class OrderView(APIView):
         },
     )
     def get(self, request):
-        """Отримання інформації про замовлення"""
+        """Отримання інформації про замовлення."""
 
         order_id = request.query_params.get("order_id")
         if not order_id:
@@ -55,13 +73,10 @@ class OrderView(APIView):
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
             return rest_response(
-                {"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND,
             )
-        # print(type(order.products))
 
-        # user = request.user
         # Якщо незареєстрований користувач
-
         user = User.objects.get(id=order.user_id)
 
         if not email == user.email:
@@ -145,7 +160,7 @@ class OrderView(APIView):
         },
     )
     def post(self, request):
-        """Створення замовлення"""
+        """Створення замовлення."""
 
         # Отримання інформації з запиту
         session = request.session
@@ -156,13 +171,13 @@ class OrderView(APIView):
             cart = CartAnonymous.objects.get(session=session.session_key)
         except CartAnonymous.DoesNotExist:
             return rest_response(
-                {"error": "Basket does not exist"}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Basket does not exist"}, status=status.HTTP_404_NOT_FOUND,
             )
 
         cart_items = CartAnonymousItem.objects.filter(cart=cart)
         if not cart_items:
             return rest_response(
-                {"error": "Basket is empty"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Basket is empty"}, status=status.HTTP_400_BAD_REQUEST,
             )
 
         # Створення нового користувача або пошук в базі
@@ -187,20 +202,10 @@ class OrderView(APIView):
 
         try:
             user = User.objects.get(email=email)
-            # if user:
-            #     ...
-            # return rest_response(
-            #     {"error": "This email already exists "},
-            #     status=status.HTTP_400_BAD_REQUEST,
-            # )
         except:
             user = User.objects.create(first_name=first_name, last_name=last_name, phone=phone, email=email)
-            # return rest_response(
-            #     {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-            # )
 
         # Створення адреси або пошук в базі
-        # addresses = Address.objects.all().filter(city=city)
         address = Address.objects.create(city=city)
 
         address.address = data.get("address")
@@ -221,11 +226,9 @@ class OrderView(APIView):
         # Копіювання товарів з кошика до замовлення
         for item in cart_items:
             order_item = OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
-        # order_item.save()
         # Видалення кошика
         cart.delete()
 
-        # session = request.session
         order_items = OrderItem.objects.filter(order=order)
         serializer = OrderItemSerializer(order_items, many=True)
         serializer_user = OrderUserSerializer(user)
