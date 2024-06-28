@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.utils.text import slugify
 
 import factory
@@ -9,7 +8,7 @@ from core.apps.products.models import (
     Product,
 )
 
-from .models import (
+from core.apps.categories.models import (
     Category,
     Subcategory,
 )
@@ -64,7 +63,6 @@ class ProductFactory(factory.django.DjangoModelFactory):
     quantity_in_stock = 10
     rate = 5
     color = factory.SubFactory(ColorFactory)
-    date = factory.LazyFunction(timezone.now)
     subtitle = 'Test subtitle for Product 1'
     subscription = 'Test subscription for Product 1'
     features = 'Test features for Product 1'

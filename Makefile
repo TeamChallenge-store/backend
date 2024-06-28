@@ -52,7 +52,6 @@ app-logs:
 db-logs:
 	${DC} -f ${STORAGES_FILE} logs -f
 
-
 .PHONY: app-down
 app-down:
 	${DC} -f ${APP_FILE} -f ${STORAGES_FILE} down
@@ -72,7 +71,6 @@ superuser:
 .PHONY: collectstatic
 collectstatic:
 	${EXEC} ${APP_CONTAINER} ${MANAGE_PY} collectstatic
-
 
 .PHONY: run-test
 run-test:

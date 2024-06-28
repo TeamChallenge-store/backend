@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core.apps.categories.factories import (
+from tests.categories.factories import (
     BrandFactory,
     CategoryFactory,
     ColorFactory,

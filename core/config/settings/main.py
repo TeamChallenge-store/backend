@@ -1,5 +1,4 @@
 import os
-import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -8,9 +7,8 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
-sys.path.append(str(BASE_DIR / 'core' / 'apps'))
-
 cert_file_path = BASE_DIR / "rest_test.json"
+PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 
 # Перевіряємо наявність файлу з сертифікатом
 if cert_file_path.exists():
@@ -20,8 +18,6 @@ else:
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
             str(BASE_DIR) + "/rest.json"
     )
-
-PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 
 if PRODUCTION_ENV_FILE.exists():
     load_dotenv(dotenv_path=PRODUCTION_ENV_FILE)
@@ -43,12 +39,12 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
-    'basket',
-    'products',
-    'categories',
-    'orders',
-    'users',
-    'common',
+    'core.apps.basket',
+    'core.apps.products',
+    'core.apps.categories',
+    'core.apps.orders',
+    'core.apps.users',
+    'core.apps.common',
 
     'django.contrib.admin',
     'django.contrib.auth',
