@@ -2,15 +2,14 @@ from django.utils.text import slugify
 
 import factory
 
+from core.apps.categories.models import (
+    Category,
+    Subcategory,
+)
 from core.apps.products.models import (
     Brand,
     Color,
     Product,
-)
-
-from core.apps.categories.models import (
-    Category,
-    Subcategory,
 )
 
 

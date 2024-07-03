@@ -6,6 +6,7 @@ from tests.categories.factories import (
     CategoryFactory,
     SubcategoryFactory,
 )
+
 from core.apps.categories.views import (
     CategoryDetail,
     CategoryList,

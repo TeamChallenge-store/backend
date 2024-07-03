@@ -6,6 +6,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     BrandListView,
+    CommentProductListView,
     ProductDetailView,
     ProductListView,
 )
@@ -13,6 +14,7 @@ from .views import (
 
 router = DefaultRouter()
 router.register(r'brands', BrandListView, basename='brands')
+router.register(r'comments', CommentProductListView, basename='comments')
                     
 
 urlpatterns = [

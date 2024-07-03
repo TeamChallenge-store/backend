@@ -2,7 +2,7 @@ from rest_framework import (
     status,
     viewsets,
 )
-from rest_framework.response import Response as responce
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from drf_yasg import openapi
@@ -12,10 +12,12 @@ from core.apps.categories.services import filter_products
 
 from .models import (
     Brand,
+    Comment,
     Product,
 )
 from .serializers import (
     BrandSerializer,
+    CommentSerializer,
     ProductDetailSerializer,
     ProductListSerializer,
 )
@@ -69,11 +71,21 @@ class ProductDetailView(APIView):
         try:
             product = Product.objects.get(pk=product_id)
             serializer = ProductDetailSerializer(product)
-            return responce(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Product.DoesNotExist:
-            return responce({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class BrandListView(viewsets.ReadOnlyModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
+
+
+class CommentProductListView(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    #authentication_classes = (authentication.TokenAuthentication,)
+    # permission_classes = (permissions.IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
