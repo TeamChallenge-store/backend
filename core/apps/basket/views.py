@@ -17,7 +17,13 @@ from .serializers import (
     CartAnonymousItemSerializer,
     CartItemSerializer,
 )
-from .services import *
+
+from .tasks import (
+    delete_user_cart,
+    remove_cart_item,
+)
+
+from .services import show_cart
 
 
 class CartView(APIView):
@@ -100,7 +106,7 @@ class CartView(APIView):
                     {"error": "Cart not found"}, status=status.HTTP_404_NOT_FOUND,
                 )
 
-        cart.delete()
+        delete_user_cart.delay(cart.id)
         return rest_response({"success": "Cart delete"}, status=status.HTTP_200_OK)
 
     pk = openapi.Parameter(
@@ -182,7 +188,7 @@ class CartView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
-        cart_item.delete()
+        remove_cart_item.delay(cart.id, product.id)
 
         response_data.update(
             {"success": "Product '" + str(product.name) + "' removed from cart"},

@@ -7,14 +7,12 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
-cert_file_path = BASE_DIR / "rest_test.json"
+cert_file_path = BASE_DIR / "rest.json"
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 
-# Перевіряємо наявність файлу з сертифікатом
 if cert_file_path.exists():
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(cert_file_path)
 else:
-    # Використовуємо сертифікат за замовчуванням
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
             str(BASE_DIR) + "/rest.json"
     )
@@ -39,6 +37,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
+    #apps
     'core.apps.basket',
     'core.apps.products',
     'core.apps.categories',
@@ -134,7 +133,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles '
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'bucket_photos1'
+GS_BUCKET_NAME = 'mystoragees'
+GS_PROJECT_ID = 'backend-417716'
+GS_LOCATION = 'us'
 
 CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = ['*']
@@ -142,6 +143,27 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'users.User'
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -184,8 +206,8 @@ SIMPLE_JWT = {
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',  # Ви можете використовувати 'username' або 'email' для входу
-    'USER_CREATE_PASSWORD_RETYPE': True,  # Перевірка паролю під час реєстрації
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'api/v1/auth/users/activation/{uid}/{token}',

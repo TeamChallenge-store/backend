@@ -3,5 +3,5 @@ __pycache__/
 .idea/
 db.sqlite3
 .env_production
-rest_test.json
+rest.json
 core/config/settings/local.py

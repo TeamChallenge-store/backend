@@ -2,19 +2,34 @@ version: "3.9"
 
 services:
   django:
-    container_name: "django"
+    container_name: django
     build:
       context: ..
       dockerfile: Dockerfile
+    restart: always
     command: >
       sh -c "python manage.py wait_for_db && 
-             gunicorn core.config.wsgi:application --bind 0.0.0.0:8000"
+             python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             gunicorn core.config.wsgi:application --bind 0.0.0.0:8000 -w 2"
     volumes:
       - ..:/backend
     ports:
       - "8000:8000"
+    depends_on:
+      - postgres
     env_file:
       - ../.env
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ../.env_production
 
   flower:
     build:
@@ -42,10 +57,12 @@ services:
     volumes:
       - ..:/backend
     depends_on:
+      - postgres
       - redis
 
   redis:
     image: redis:7.2.4-alpine
+    restart: always
     container_name: redis
     ports:
       - "6379:6379"
@@ -79,3 +96,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=password
     depends_on:
       - prometheus
+
+volumes:
+  postgres_data:
