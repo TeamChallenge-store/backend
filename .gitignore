@@ -5,3 +5,5 @@ db.sqlite3
 .env_production
 rest.json
 core/config/settings/local.py
+.vscode/
+.pytest_cache/

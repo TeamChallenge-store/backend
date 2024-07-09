@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+print(BASE_DIR)
 
 cert_file_path = BASE_DIR / "rest.json"
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
