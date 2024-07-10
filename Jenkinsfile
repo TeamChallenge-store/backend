@@ -40,19 +40,11 @@ pipeline {
             }
         }
 
-        stage('Health Check') {
+        stage('Run Tests') {
             steps {
                 script {
-                    sh 'sudo docker-compose -f $COMPOSE_FILE ps'
+                    sh 'sudo docker exec -it django /bin/sh -c "python manage.py test"'
                 }
-            }
-        }
-    }
-
-    post {
-        always {
-            script {
-                sh 'sudo docker-compose -f $COMPOSE_FILE logs'
             }
         }
     }
