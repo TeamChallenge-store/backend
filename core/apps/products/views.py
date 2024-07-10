@@ -52,8 +52,8 @@ class ProductListView(APIView):
             filtered_products = filtered_products.order_by('-price')
         elif sort == 'rate':
             filtered_products = filtered_products.order_by('-rate')
-        elif sort == 'date':
-            filtered_products = filtered_products.order_by('-date')
+        elif sort == 'created_at':
+            filtered_products = filtered_products.order_by('-created_at')
 
         return paginate_product_list(filtered_products, request)
 
