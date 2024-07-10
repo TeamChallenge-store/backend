@@ -19,7 +19,7 @@ services:
     depends_on:
       - postgres
     env_file:
-      - ../.env
+      - ../.env_production
 
   postgres:
     image: postgres:13-alpine
