@@ -24,8 +24,8 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
-                    sh 'docker-compose -f $COMPOSE_FILE build'
-                    sh 'docker-compose -f $COMPOSE_FILE up -d'
+                    sh 'sudo docker-compose -f $COMPOSE_FILE build'
+                    sh 'sudo docker-compose -f $COMPOSE_FILE up -d'
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sh 'docker-compose -f $COMPOSE_FILE ps'
+                    sh 'sudo docker-compose -f $COMPOSE_FILE ps'
                 }
             }
         }
@@ -42,13 +42,13 @@ pipeline {
     post {
         always {
             script {
-                sh 'docker-compose -f $COMPOSE_FILE logs'
+                sh 'sudo docker-compose -f $COMPOSE_FILE logs'
             }
         }
 
         cleanup {
             script {
-                sh 'docker-compose -f $COMPOSE_FILE down'
+                sh 'sudo docker-compose -f $COMPOSE_FILE down'
 
                 sh 'sudo docker rm -f $(sudo docker ps -aq) || true'
 
