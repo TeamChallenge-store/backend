@@ -43,7 +43,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    sh 'sudo docker exec -it django /bin/sh -c "python manage.py test"'
+                    sh 'sudo docker exec django python manage.py test'
                 }
             }
         }
