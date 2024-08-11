@@ -1,0 +1,58 @@
+# my-backend-chart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        - name: SECRET_KEY
+          value: "{{ .Values.backend.env.SECRET_KEY }}"
+        - name: DEBUG
+          value: "{{ .Values.backend.env.DEBUG }}"
+        - name: DB_NAME
+          value: "{{ .Values.backend.env.DB_NAME }}"
+        - name: DB_USER
+          value: "{{ .Values.backend.env.DB_USER }}"
+        - name: DB_PASSWORD
+          value: "{{ .Values.postgres.env.POSTGRES_PASSWORD }}"
+        - name: DB_HOST
+          value: "{{ .Values.postgres.service.name }}"
+        - name: DB_PORT
+          value: "{{ .Values.postgres.service.port }}"
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "{{ .Values.resources.requests.memory }}"
+            cpu: "{{ .Values.resources.requests.cpu }}"
+          limits:
+            memory: "{{ .Values.resources.limits.memory }}"
+            cpu: "{{ .Values.resources.limits.cpu }}"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  annotations:
+    cloud.google.com/load-balancer-type: "External"
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 8000
+  selector:
+    app: backend
