@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: oleksandrtsybulskyy/myapp:latest
+        env:
+        - name: SECRET_KEY
+          value: 
+        - name: DEBUG
+          value: 
+        - name: DB_NAME
+          value: 
+        - name: DB_USER
+          value: 
+        - name: DB_PASSWORD
+          value: 
+        - name: DB_HOST
+          value: 
+        - name: DB_PORT
+          value: 
+        - name: POSTGRES_PASSWORD
+          value: 
+        ports:
+        - containerPort: 8000  
+
