@@ -21,15 +21,15 @@ spec:
         - name: DEBUG
           value: "{{ .Values.backend.env.DEBUG }}"
         - name: DB_NAME
-          value: "{{ .Values.backend.env.DB_NAME }}"
+          value: "{{ .Values.postgresql.auth.database }}"
         - name: DB_USER
-          value: "{{ .Values.backend.env.DB_USER }}"
+          value: "{{ .Values.postgresql.auth.username }}"
         - name: DB_PASSWORD
-          value: "{{ .Values.postgres.env.POSTGRES_PASSWORD }}"
+          value: "{{ .Values.postgresql.auth.postgresPassword }}"
         - name: DB_HOST
-          value: "{{ .Values.postgres.service.name }}"
+          value: "{{ .Release.Name }}-postgresql"
         - name: DB_PORT
-          value: "{{ .Values.postgres.service.port }}"
+          value: "{{ .Values.postgresql.service.port }}"
         ports:
         - containerPort: 8000
         resources:

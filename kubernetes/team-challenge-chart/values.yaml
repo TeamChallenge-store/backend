@@ -9,15 +9,18 @@ service:
   type: ClusterIP
   port: 80
 
-postgres:
-  image: postgres:14
+
+postgresql:
+  auth:
+    postgresPassword: mazda626
+    database:  postgres
+    username: postgres
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
   service:
-    name: postgres-service
     port: 5432
-  env:
-    POSTGRES_DB: postgres
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: mazda626
 
 resources:
   requests:
@@ -49,7 +52,7 @@ frontend:
 
 backend:
   env:
-    SECRET_KEY: 
+    SECRET_KEY: "django-insecure-g%fp$#p^xx8cdkf^4=)qxt=k-gjda+ysq)izxcb(7o=1ei%_cm"
     DEBUG: "False"
     DB_NAME: "postgres"
     DB_USER: "postgres"
