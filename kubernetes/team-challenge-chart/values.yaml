@@ -1,4 +1,4 @@
-replicaCount: 8
+replicaCount: 20
 
 image:
   repository: oleksandrtsybulskyy/myapp
@@ -11,7 +11,8 @@ service:
 
 
 postgresql:
-  replicas: 5
+  readReplicas:
+    replicaCount: 10
   auth:
     postgresPassword: mazda626
     database:  postgres
@@ -32,7 +33,7 @@ resources:
     cpu: "500"
 
 frontend:
-  replicaCount: 8
+  replicaCount: 20
   image:
     repository: oleksandrtsybulskyy/parasha
     tag: latest
