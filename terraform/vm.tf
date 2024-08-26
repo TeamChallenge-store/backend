@@ -4,7 +4,7 @@ resource "google_compute_instance" "public_instance" {
 
   boot_disk {
     initialize_params {
-      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
       size  = 30
     }
   }
