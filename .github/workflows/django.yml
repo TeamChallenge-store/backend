@@ -26,16 +26,28 @@ jobs:
           terraform_version: 1.5.0
 
       - name: Initialize Terraform
-        run: terraform init
+        run: terraform/terraform init
 
       - name: Apply Terraform configuration
-        run: terraform apply -auto-approve
+        run: terraform/terraform apply -auto-approve
+
+      - name: Upload SSH key and dynamic inventory
+        run: |
+          echo "::set-output name=private_key::$(cat terraform/key)"
+          echo "::set-output name=inventory::$(cat terraform/dynamic-inventory.ini)"
+        id: upload-files
+
+      - name: Add SSH key to GitHub secrets
+        run: |
+          gh secret set VM_SSH_KEY -b"${{ steps.upload-files.outputs.private_key }}"
+          gh secret set DYNAMIC_INVENTORY -b"${{ steps.upload-files.outputs.inventory }}"
 
       - name: Install Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
 
       - name: Run Ansible Playbook
-        run: ansible-playbook serverdp.yml --vault-password-file .vault_pass
+        run: |
+          echo "${{ secrets.VM_SSH_KEY }}" > terraform/key
+          chmod 400 private_key.pem
+          ansible-playbook -i ${{ secrets.DYNAMIC_INVENTORY }} serverdp.yml
 
-      - name: Notify GitHub of the deployment
-        run: gh api repos/{owner}/{repo}/deployments -f ref=main -f environment=production -f description="Deploying with GitHub Actions"
