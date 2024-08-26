@@ -67,7 +67,7 @@
   commad: git checkout develop
   args:
     chdir: /home/front
-   become: yes
+  become: yes
 
 - name: Run Docker Compose from defaults front
   command: docker-compose up -d
