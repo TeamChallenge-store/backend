@@ -30,9 +30,9 @@
     state: present
     
 - name: Copy .env_production file to the cloned repository
-      copy:
-        src: defaults/.env_production
-        dest:  /home/server_deploy/.env_production
+  copy:
+    src: defaults/.env_production
+    dest:  /home/server_deploy/.env_production
 
 - name: Clone Git repository
   git:
