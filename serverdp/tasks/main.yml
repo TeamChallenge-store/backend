@@ -65,7 +65,7 @@
 
 - name: Checkout develop
   commad: git checkout develop
-    args:
+  args:
     chdir: /home/front
    become: yes
 
