@@ -17,7 +17,7 @@ resource "google_compute_instance" "public_instance" {
   tags = ["http-server", "https-server"]
 
   metadata = {
-    ssh-keys = "${var.key_name}:${tls_private_key.rsa_4096.public_key_openssh}"
+    ssh-keys = "ubuntu:key"
   }
 
   provisioner "local-exec" {
@@ -32,8 +32,8 @@ resource "google_compute_instance" "public_instance" {
     connection {
       type        = "ssh"
       host        = google_compute_instance.public_instance.network_interface.0.access_config.0.nat_ip
-      user        = "your_username"
-      private_key = tls_private_key.rsa_4096.private_key_pem
+      user        = "ubuntu"
+      private_key = "key"
     }
   }
   
@@ -42,7 +42,7 @@ resource "google_compute_instance" "public_instance" {
 data "template_file" "inventory" {
   template = <<-EOT
     [gcp_instances]
-    ${google_compute_instance.public_instance.network_interface.0.access_config.0.nat_ip} ansible_user=ubuntu ansible_private_key_file=${path.module}/${var.key_name}
+    ${google_compute_instance.public_instance.network_interface.0.access_config.0.nat_ip} ansible_user=ubuntu ansible_private_key_file=${path.module}/key
   EOT
 }
 
