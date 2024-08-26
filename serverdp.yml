@@ -1,0 +1,10 @@
+---
+- name: use serverdp playbook
+  hosts: ec2_instances
+  become: true
+  gather_facts: yes
+  ignore_errors: yes
+
+  roles:
+    - role: serverdp
+      system_manager: y.belichenko007@gmail.com
