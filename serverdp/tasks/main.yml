@@ -61,13 +61,8 @@
 - name: Clone Git repository front
   git:
     repo: https://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@github.com/TeamChallenge-store/client.git
+    version: develop
     dest: /home/front
-
-- name: Checkout develop
-  commad: git checkout develop
-  args:
-    chdir: /home/front
-  become: yes
 
 - name: Run Docker Compose from defaults front
   command: docker-compose up -d
