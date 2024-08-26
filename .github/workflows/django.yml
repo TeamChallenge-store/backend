@@ -26,8 +26,9 @@ jobs:
         with:
           terraform_version: 1.5.0
           
-      - name: TEST REpo
-        run: ls -la
+      - name: generate key
+        run: ssh-keygen -t rsa -b 4096 -f key
+        working-directory: terraform 
 
       - name: Initialize Terraform
         run: terraform init
