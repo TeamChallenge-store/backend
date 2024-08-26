@@ -41,7 +41,7 @@ resource "google_compute_instance" "public_instance" {
 data "template_file" "inventory" {
   template = <<-EOT
     [gcp_instances]
-    ${google_compute_instance.public_instance.network_interface.0.access_config.0.nat_ip} ansible_user=ubuntu ansible_private_key_file=${path.module}/key
+    ${google_compute_instance.public_instance.network_interface.0.access_config.0.nat_ip} ansible_user=ubuntu ansible_private_key_file=terraform/key
   EOT
 }
 
