@@ -17,7 +17,7 @@ resource "google_compute_instance" "public_instance" {
   tags = ["http-server", "https-server"]
 
   metadata = {
-    ssh-keys = "ubuntu:${file("key")}"
+    ssh-keys = "ubuntu:${file("key.pub")}"
   }
 
   provisioner "local-exec" {
