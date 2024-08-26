@@ -33,6 +33,7 @@
   copy:
     src: defaults/.env_production
     dest:  /home/server_deploy/.env_production
+    mode: "0777"
 
 - name: Clone Git repository
   git:
