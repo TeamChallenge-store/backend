@@ -34,9 +34,6 @@ jobs:
       - name: Install Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
 
-      - name: Install Ansible Galaxy roles
-        run: ansible-galaxy install -r requirements.yml
-
       - name: Run Ansible Playbook
         run: ansible-playbook serverdp.yml --vault-password-file .vault_pass
 
