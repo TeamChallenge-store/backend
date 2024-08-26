@@ -3,11 +3,11 @@ resource "google_compute_instance" "public_instance" {
   machine_type = "e2-medium"
 
   boot_disk {
-  initialize_params {
-    image = "ubuntu-os-cloud/ubuntu-2004-lts" 
-    size  = 30
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      size  = 30
+    }
   }
-}
 
   network_interface {
     network = "default"
@@ -17,7 +17,7 @@ resource "google_compute_instance" "public_instance" {
   tags = ["http-server", "https-server"]
 
   metadata = {
-    ssh-keys = "ubuntu:key"
+    ssh-keys = "ubuntu:${file("key")}"
   }
 
   provisioner "local-exec" {
@@ -33,10 +33,9 @@ resource "google_compute_instance" "public_instance" {
       type        = "ssh"
       host        = google_compute_instance.public_instance.network_interface.0.access_config.0.nat_ip
       user        = "ubuntu"
-      private_key = "key"
+      private_key = file("key")
     }
   }
-  
 }
 
 data "template_file" "inventory" {
