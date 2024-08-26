@@ -38,19 +38,6 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: terraform 
 
-      - name: Upload SSH key and dynamic inventory
-        id: upload-files
-        run: |
-          echo "::set-output name=private_key::$(cat terraform/key)"
-          echo "::set-output name=inventory::$(cat terraform/dynamic-inventory.ini)"
-
-      - name: Add SSH key and inventory to GitHub secrets
-        uses: kornicameister/gh-secrets-action@master
-        with:
-          secrets: |
-            VM_SSH_KEY=${{ steps.upload-files.outputs.private_key }}
-            DYNAMIC_INVENTORY=${{ steps.upload-files.outputs.inventory }}
-
       - name: Install Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
 
