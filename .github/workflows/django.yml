@@ -45,7 +45,7 @@ jobs:
           echo "::set-output name=inventory::$(cat terraform/dynamic-inventory.ini)"
 
       - name: Add SSH key and inventory to GitHub secrets
-        uses: peaceiris/actions-gh-secrets@v1
+        uses: kornicameister/gh-secrets-action@master
         with:
           secrets: |
             VM_SSH_KEY=${{ steps.upload-files.outputs.private_key }}
