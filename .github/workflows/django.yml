@@ -39,15 +39,17 @@ jobs:
         working-directory: terraform 
 
       - name: Upload SSH key and dynamic inventory
+        id: upload-files
         run: |
           echo "::set-output name=private_key::$(cat terraform/key)"
           echo "::set-output name=inventory::$(cat terraform/dynamic-inventory.ini)"
-        id: upload-files
 
-      - name: Add SSH key to GitHub secrets
-        run: |
-          gh secret set VM_SSH_KEY -b"${{ steps.upload-files.outputs.private_key }}"
-          gh secret set DYNAMIC_INVENTORY -b"${{ steps.upload-files.outputs.inventory }}"
+      - name: Add SSH key and inventory to GitHub secrets
+        uses: peaceiris/actions-gh-secrets@v1
+        with:
+          secrets: |
+            VM_SSH_KEY=${{ steps.upload-files.outputs.private_key }}
+            DYNAMIC_INVENTORY=${{ steps.upload-files.outputs.inventory }}
 
       - name: Install Ansible
         run: sudo apt-get update && sudo apt-get install -y ansible
