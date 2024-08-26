@@ -42,7 +42,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ansible
 
       - name: Add .env_production
-        run: ${{ secrets.CREDENTIALS }} > defaults/.env_production
+        run: echo "${{ secrets.CREDENTIALS }}" > defaults/.env_production
         working-directory: serverdp
 
       - name: Run Ansible Playbook
