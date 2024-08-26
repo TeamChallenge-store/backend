@@ -32,7 +32,7 @@
 
 - name: Clone Git repository
   git:
-    repo: https://${GITHUB_TOKEN}@github.com/TeamChallenge-store/backend.git
+    repo: https://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@github.com/TeamChallenge-store/backend.git
     dest: /home/server_deploy
 
 - name: Run Docker Compose from defaults
