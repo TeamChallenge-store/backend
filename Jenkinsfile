@@ -31,14 +31,14 @@ pipeline {
             }
         }
 
-        stage('Build and Deploy') {
-            steps {
-                script {
-                    sh 'sudo docker-compose -f $COMPOSE_FILE build'
-                    sh 'sudo docker-compose -f $COMPOSE_FILE up -d'
-                }
-            }
-        }
+        // stage('Build and Deploy') {
+        //     steps {
+        //         script {
+        //             sh 'sudo docker-compose -f $COMPOSE_FILE build'
+        //             sh 'sudo docker-compose -f $COMPOSE_FILE up -d'
+        //         }
+        //     }
+        // }
 
         stage('Run Tests') {
             steps {
