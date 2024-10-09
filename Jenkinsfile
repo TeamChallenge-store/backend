@@ -22,23 +22,23 @@ pipeline {
             }
         }
 
-        stage('Copy Env Files') {
-            steps {
-                script {
-                    sh 'sudo cp /var/.env_production /var/lib/jenkins/workspace/django_rest/.env_production'
-                    sh 'sudo cp /var/rest.json /var/lib/jenkins/workspace/django_rest/rest.json'
-                }
-            }
-        }
-
-        // stage('Build and Deploy') {
+        // stage('Copy Env Files') {
         //     steps {
         //         script {
-        //             sh 'sudo docker-compose -f $COMPOSE_FILE build'
-        //             sh 'sudo docker-compose -f $COMPOSE_FILE up -d'
+        //             sh 'sudo cp /var/.env_production /var/lib/jenkins/workspace/django_rest/.env_production'
+        //             sh 'sudo cp /var/rest.json /var/lib/jenkins/workspace/django_rest/rest.json'
         //         }
         //     }
         // }
+
+        stage('Build and Deploy') {
+            steps {
+                script {
+                    sh 'sudo docker-compose -f $COMPOSE_FILE build'
+                    sh 'sudo docker-compose -f $COMPOSE_FILE up -d'
+                }
+            }
+        }
 
         stage('Run Tests') {
             steps {
