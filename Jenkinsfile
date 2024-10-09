@@ -18,7 +18,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'master', credentialsId: 'jenkins', url: 'https://github.com/TeamChallenge-store/backend.git'
+                git branch: 'master', credentialsId: 'lox', url: 'https://github.com/TeamChallenge-store/backend.git'
             }
         }
 
