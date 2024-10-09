@@ -21,6 +21,14 @@ pipeline {
                 git branch: 'master', credentialsId: 'lox', url: 'https://github.com/TeamChallenge-store/backend.git'
             }
         }
+        stage('Debug') {
+            steps {
+                script {
+                    sh 'ls -l /var'
+                    sh 'ls -l /var/lib/jenkins/workspace/backend'
+                }
+            }
+        }
 
         stage('Copy Env Files') {
             steps {
