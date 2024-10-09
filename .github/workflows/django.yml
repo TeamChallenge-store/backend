@@ -1,50 +1,50 @@
-name: Deploy Infrastructure
+# name: Deploy Infrastructure
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-  workflow_dispatch:
+# on:
+#   push:
+#     branches:
+#       - master
+#   pull_request:
+#     branches:
+#       - master
+#   workflow_dispatch:
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    env:
-      GOOGLE_CREDENTIALS: ${{ secrets.GCP_KEY }}
-      GITHUB_TOKEN: ${{ secrets.TOKEN }}
+#     env:
+#       GOOGLE_CREDENTIALS: ${{ secrets.GCP_KEY }}
+#       GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout the repository
+#         uses: actions/checkout@v3
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v2
+#         with:
+#           terraform_version: 1.5.0
           
-      - name: generate key
-        run: ssh-keygen -t rsa -b 4096 -f key
-        working-directory: terraform 
+#       - name: generate key
+#         run: ssh-keygen -t rsa -b 4096 -f key
+#         working-directory: terraform 
 
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: terraform 
+#       - name: Initialize Terraform
+#         run: terraform init
+#         working-directory: terraform 
 
-      - name: Apply Terraform configuration
-        run: terraform apply -auto-approve
-        working-directory: terraform 
+#       - name: Apply Terraform configuration
+#         run: terraform apply -auto-approve
+#         working-directory: terraform 
 
-      - name: Install Ansible
-        run: sudo apt-get update && sudo apt-get install -y ansible
+#       - name: Install Ansible
+#         run: sudo apt-get update && sudo apt-get install -y ansible
 
-      - name: Add .env_production
-        run: echo "${{ secrets.CREDENTIALS }}" > defaults/.env_production
-        working-directory: serverdp
+#       - name: Add .env_production
+#         run: echo "${{ secrets.CREDENTIALS }}" > defaults/.env_production
+#         working-directory: serverdp
 
-      - name: Run Ansible Playbook
-        run: ansible-playbook -i terraform/dynamic_inventory.ini serverdp.yml
+#       - name: Run Ansible Playbook
+#         run: ansible-playbook -i terraform/dynamic_inventory.ini serverdp.yml
 
