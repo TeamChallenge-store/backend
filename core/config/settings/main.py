@@ -10,6 +10,7 @@ print(BASE_DIR)
 
 cert_file_path = BASE_DIR / "rest.json"
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
+DEVELOPMENT_ENV_FILE = BASE_DIR / '.env_example'
 
 if cert_file_path.exists():
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(cert_file_path)
@@ -21,7 +22,7 @@ else:
 if PRODUCTION_ENV_FILE.exists():
     load_dotenv(dotenv_path=PRODUCTION_ENV_FILE)
 else:
-    load_dotenv()
+    load_dotenv(dotenv_path=DEVELOPMENT_ENV_FILE)
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG')
