@@ -134,8 +134,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles '
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'mystoragees'
-GS_PROJECT_ID = 'backend-417716'
+GS_BUCKET_NAME = 'for_backend'
+GS_PROJECT_ID = 'global-matrix-438108-c0'
 GS_LOCATION = 'us'
 
 CORS_ALLOW_ALL_ORIGINS = True
