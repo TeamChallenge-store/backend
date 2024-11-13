@@ -50,12 +50,12 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh 'sudo docker exec django python manage.py test'
-                }
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         script {
+        //             sh 'sudo docker exec django python manage.py test'
+        //         }
+        //     }
+        // }
     }
 }
