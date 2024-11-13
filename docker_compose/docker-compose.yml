@@ -14,7 +14,7 @@ services:
     depends_on:
       - postgres
     env_file:
-      - ../.env_production
+      - ../.env_example
     command: >
       sh -c "python manage.py wait_for_db && 
              python manage.py migrate &&
@@ -28,7 +28,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - ../.env_production
+      - ../.env_example
 
   flower:
     build:
