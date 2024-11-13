@@ -145,11 +145,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',  # or whatever port your local server is running on
 ]
 
-ALLOWED_HOSTS = [
-    'django.pp.ua',
-    'localhost',
-    '127.0.0.1',  # If using localhost with IP address
-]
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
     'https://django.pp.ua',
