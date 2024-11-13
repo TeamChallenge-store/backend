@@ -7,3 +7,4 @@ rest.json
 core/config/settings/local.py
 .vscode/
 .pytest_cache/
+staticfiles/

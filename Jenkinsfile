@@ -26,6 +26,8 @@ pipeline {
                 script {
                     sh 'ls -l /var'
                     sh 'ls -l /var/lib/jenkins/workspace/backend'
+                    sh 'sudo touch /var/lib/jenkins/workspace/backend/rest.json'
+                    sh 'sudo touch /var/lib/jenkins/workspace/backend/.env_production'
                 }
             }
         }
