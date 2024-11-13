@@ -35,7 +35,7 @@ pipeline {
         stage('Copy Env Files') {
             steps {
                 script {
-                    sh 'sudo cp /var/.env_production /var/lib/jenkins/workspace/backend/.env_production'
+                    sh 'sudo cp /var/.env_production /var/lib/jenkins/workspace/backend/.env_example'
                     sh 'sudo cp /var/rest.json /var/lib/jenkins/workspace/backend/rest.json'
                 }
             }
