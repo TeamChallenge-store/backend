@@ -50,21 +50,20 @@ class ProductListView(APIView):
         max_price = request.query_params.get('max_price', None)
         sort = request.query_params.get('sort')
         search_query = request.query_params.get('search', None)
-        brand = request.query_params.get('brand', None)  # Новий параметр
-        color = request.query_params.get('color', None)  # Новий параметр
+        brand = request.query_params.getlist('brand', None)
+        color = request.query_params.getlist('color', None)
 
         filtered_products = filter_price_products(min_price, max_price)
         filtered_products = filter_products(filtered_products, search_query=search_query)
 
-        # Фільтрація за брендом
         if brand:
-            filtered_products = filtered_products.filter(brand__name__icontains=brand)
+            brand_list = [item.strip() for item in ",".join(brand).split(",")]
+            filtered_products = filtered_products.filter(brand__name__in=brand_list)
 
-        # Фільтрація за кольором
         if color:
-            filtered_products = filtered_products.filter(color__name__icontains=color)
+            color_list = [item.strip() for item in ",".join(color).split(",")]
+            filtered_products = filtered_products.filter(color__name__icontains=color_list)
 
-        # Сортування
         if sort == 'price_up':
             filtered_products = filtered_products.order_by('price')
         elif sort == 'price_down':
@@ -79,7 +78,6 @@ class ProductListView(APIView):
             filtered_products = filtered_products.order_by('color__name')
 
         return paginate_product_list(filtered_products, request)
-
 
 
 class ProductDetailView(APIView):
@@ -108,6 +106,7 @@ class BrandListView(viewsets.ReadOnlyModelViewSet):
 class CommentProductListView(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
     #authentication_classes = (authentication.TokenAuthentication,)
     # permission_classes = (permissions.IsAuthenticated,)
 
