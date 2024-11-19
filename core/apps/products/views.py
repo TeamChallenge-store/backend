@@ -31,6 +31,14 @@ class ProductListView(APIView):
     """"Вивід списку продуктів."""
 
     @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'brand', openapi.IN_QUERY, description="Фільтр за брендом", type=openapi.TYPE_STRING
+            ),
+            openapi.Parameter(
+                'color', openapi.IN_QUERY, description="Фільтр за кольором", type=openapi.TYPE_STRING
+            ),
+        ],
         responses={
             200: openapi.Response(description='Success', schema=ProductListSerializer(many=True)),
             400: openapi.Response(description='Bad Request'),
@@ -42,10 +50,21 @@ class ProductListView(APIView):
         max_price = request.query_params.get('max_price', None)
         sort = request.query_params.get('sort')
         search_query = request.query_params.get('search', None)
+        brand = request.query_params.get('brand', None)  # Новий параметр
+        color = request.query_params.get('color', None)  # Новий параметр
 
         filtered_products = filter_price_products(min_price, max_price)
         filtered_products = filter_products(filtered_products, search_query=search_query)
 
+        # Фільтрація за брендом
+        if brand:
+            filtered_products = filtered_products.filter(brand__name__icontains=brand)
+
+        # Фільтрація за кольором
+        if color:
+            filtered_products = filtered_products.filter(color__name__icontains=color)
+
+        # Сортування
         if sort == 'price_up':
             filtered_products = filtered_products.order_by('price')
         elif sort == 'price_down':
@@ -54,8 +73,13 @@ class ProductListView(APIView):
             filtered_products = filtered_products.order_by('-rate')
         elif sort == 'created_at':
             filtered_products = filtered_products.order_by('-created_at')
+        elif sort == 'brand':
+            filtered_products = filtered_products.order_by('brand__name')
+        elif sort == 'color':
+            filtered_products = filtered_products.order_by('color__name')
 
         return paginate_product_list(filtered_products, request)
+
 
 
 class ProductDetailView(APIView):
