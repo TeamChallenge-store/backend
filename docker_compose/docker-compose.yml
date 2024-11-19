@@ -14,12 +14,11 @@ services:
     depends_on:
       - postgres
     env_file:
-      - ../.env_example
+      - ../.env_production
     command: >
       sh -c "python manage.py wait_for_db && 
-             python manage.py collectstatic --noinput &&
              python manage.py migrate &&
-             gunicorn core.config.wsgi:application --bind 0.0.0.0:8000 -w 2"
+             python manage.py runserver 0.0.0.0:8000"
 
   postgres:
     image: postgres:13-alpine
@@ -29,7 +28,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - ../.env_example
+      - ../.env_production
 
   flower:
     build:

@@ -43,4 +43,5 @@ urlpatterns = [
     path("api/v1/", include("core.apps.orders.urls"), name="orders"),
     path("api/v1/", include("core.apps.users.urls"), name="users"),
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

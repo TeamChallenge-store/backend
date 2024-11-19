@@ -12,12 +12,12 @@ cert_file_path = BASE_DIR / "rest.json"
 PRODUCTION_ENV_FILE = BASE_DIR / '.env_production'
 DEVELOPMENT_ENV_FILE = BASE_DIR / '.env_example'
 
-if cert_file_path.exists():
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(cert_file_path)
-else:
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
-            str(BASE_DIR) + "/rest.json"
-    )
+# if cert_file_path.exists():
+#     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(cert_file_path)
+# else:
+#     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
+#             str(BASE_DIR) + "/rest.json"
+#     )
 
 if PRODUCTION_ENV_FILE.exists():
     load_dotenv(dotenv_path=PRODUCTION_ENV_FILE)
@@ -134,10 +134,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles '
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = 'for_backend'
-GS_PROJECT_ID = 'global-matrix-438108-c0'
-GS_LOCATION = 'us'
+IS_DEV = os.getenv("DEBUG", "False") == "True"
+
+if DEBUG:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+else:
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'for_backend'
+    GS_PROJECT_ID = 'global-matrix-438108-c0'
+    GS_LOCATION = 'us'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
