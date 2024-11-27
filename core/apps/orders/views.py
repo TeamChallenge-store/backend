@@ -24,7 +24,6 @@ from .serializers import (
     OrderUserSerializer,
 )
 
-
 NOVA_POSHTA_DELIVERY = 70
 UKR_POSHTA_DELIVERY = 70
 COURIER = 150
@@ -43,8 +42,8 @@ class OrderView(APIView):
 
     @swagger_auto_schema(
         operation_description="specify the order number as 'order_id' to be showed",
-            # '\n'\
-            # SHIP_METHODS = [('NP', 'Nova Poshta'), ('UP', 'Ukr Poshta'), ('CR', 'Courier')]",
+        # '\n'\
+        # SHIP_METHODS = [('NP', 'Nova Poshta'), ('UP', 'Ukr Poshta'), ('CR', 'Courier')]",
         manual_parameters=[order_id, email],
         responses={
             200: openapi.Response(description="Success", schema=OrderSerializer()),
@@ -113,7 +112,7 @@ class OrderView(APIView):
             "total_price": sum(
                 item.quantity * item.product.price for item in order_items
             )
-            + delivery_price,
+                           + delivery_price,
         }
 
         return rest_response(response_data, status=status.HTTP_200_OK)
@@ -194,7 +193,7 @@ class OrderView(APIView):
             email = data.get("email")
             city = data.get("city")
 
-        if 0==len(first_name)*len(last_name)*len(phone)*len(email)*len(city):
+        if 0 == len(first_name) * len(last_name) * len(phone) * len(email) * len(city):
             return rest_response(
                 {"error": "some fields is empty"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -255,7 +254,7 @@ class OrderView(APIView):
             "total_price": sum(
                 item.quantity * item.product.price for item in order_items
             )
-            + delivery_price,
+                           + delivery_price,
         }
 
         return rest_response(response_data, status=status.HTTP_201_CREATED)

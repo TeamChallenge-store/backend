@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import (
     status,
     viewsets,
@@ -57,12 +58,15 @@ class ProductListView(APIView):
         filtered_products = filter_products(filtered_products, search_query=search_query)
 
         if brand:
-            brand_list = [item.strip() for item in ",".join(brand).split(",")]
+            brand_list = [item.strip() for item in brand]
             filtered_products = filtered_products.filter(brand__name__in=brand_list)
 
         if color:
-            color_list = [item.strip() for item in ",".join(color).split(",")]
-            filtered_products = filtered_products.filter(color__name__icontains=color_list)
+            color_list = [item.strip().lower() for item in color]
+            color_query = Q()
+            for col in color_list:
+                color_query |= Q(color__name__iexact=col)
+            filtered_products = filtered_products.filter(color_query)
 
         if sort == 'price_up':
             filtered_products = filtered_products.order_by('price')

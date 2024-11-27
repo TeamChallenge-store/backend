@@ -23,6 +23,7 @@ class Brand(TimedBaseModel):
     class Meta:
         verbose_name_plural = 'Бренд'
 
+
 class Color(TimedBaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -32,6 +33,7 @@ class Color(TimedBaseModel):
 
     class Meta:
         verbose_name_plural = 'Колір'
+
 
 class Product(TimedBaseModel):
     name = models.CharField(max_length=255)
@@ -56,6 +58,7 @@ class Product(TimedBaseModel):
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = 'Продукти'
+
 
 class Comment(TimedBaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
