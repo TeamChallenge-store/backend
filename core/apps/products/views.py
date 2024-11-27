@@ -51,18 +51,18 @@ class ProductListView(APIView):
         max_price = request.query_params.get('max_price', None)
         sort = request.query_params.get('sort')
         search_query = request.query_params.get('search', None)
-        brand = request.query_params.getlist('brand', None)
-        color = request.query_params.getlist('color', None)
+        brand = request.query_params.get('brand', None)
+        color = request.query_params.get('color', None)
 
         filtered_products = filter_price_products(min_price, max_price)
         filtered_products = filter_products(filtered_products, search_query=search_query)
 
         if brand:
-            brand_list = [item.strip() for item in brand]
+            brand_list = [item.strip().lower() for item in brand.split(',')]
             filtered_products = filtered_products.filter(brand__name__in=brand_list)
 
         if color:
-            color_list = [item.strip().lower() for item in color]
+            color_list = [item.strip().lower() for item in color.split(',')]
             color_query = Q()
             for col in color_list:
                 color_query |= Q(color__name__iexact=col)
