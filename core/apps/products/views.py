@@ -1,4 +1,6 @@
 from django.db.models import Q
+from django_filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (
     status,
     viewsets,
@@ -30,6 +32,21 @@ class ProductListView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
     filterset_class = ProductFilter
+    filter_backends = [DjangoFilterBackend]
+    ordering_fields = ['price', 'rate']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        sort = self.request.query_params.get('sort', None)
+
+        if sort == 'price_up':
+            return queryset.order_by('price')
+        elif sort == 'price_down':
+            return queryset.order_by('-price')
+        elif sort == 'rate':
+            return queryset.order_by('-rate')
+
+        return queryset
 
 
 class ProductDetailView(APIView):
