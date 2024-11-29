@@ -3,6 +3,7 @@ from rest_framework import (
     status,
     viewsets,
 )
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,66 +23,13 @@ from .serializers import (
     ProductDetailSerializer,
     ProductListSerializer,
 )
-from .services import (
-    filter_price_products,
-    paginate_product_list,
-)
+from .filters import ProductFilter
 
 
-class ProductListView(APIView):
-    """"Вивід списку продуктів."""
-
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'brand', openapi.IN_QUERY, description="Фільтр за брендом", type=openapi.TYPE_STRING
-            ),
-            openapi.Parameter(
-                'color', openapi.IN_QUERY, description="Фільтр за кольором", type=openapi.TYPE_STRING
-            ),
-        ],
-        responses={
-            200: openapi.Response(description='Success', schema=ProductListSerializer(many=True)),
-            400: openapi.Response(description='Bad Request'),
-            404: openapi.Response(description='Not Found'),
-        },
-    )
-    def get(self, request):
-        min_price = request.query_params.get('min_price', None)
-        max_price = request.query_params.get('max_price', None)
-        sort = request.query_params.get('sort')
-        search_query = request.query_params.get('search', None)
-        brand = request.query_params.getlist('brand', None)
-        color = request.query_params.get('color', None)
-
-        filtered_products = filter_price_products(min_price, max_price)
-        filtered_products = filter_products(filtered_products, search_query=search_query)
-
-        if brand:
-            brand_list = [item.strip() for item in ",".join(brand).split(",")]
-            filtered_products = filtered_products.filter(brand__name__in=brand_list)
-
-        if color:
-            color_list = [item.strip().lower() for item in color.split(',')]
-            color_query = Q()
-            for col in color_list:
-                color_query |= Q(color__name__iexact=col)
-            filtered_products = filtered_products.filter(color_query)
-
-        if sort == 'price_up':
-            filtered_products = filtered_products.order_by('price')
-        elif sort == 'price_down':
-            filtered_products = filtered_products.order_by('-price')
-        elif sort == 'rate':
-            filtered_products = filtered_products.order_by('-rate')
-        elif sort == 'created_at':
-            filtered_products = filtered_products.order_by('-created_at')
-        elif sort == 'brand':
-            filtered_products = filtered_products.order_by('brand__name')
-        elif sort == 'color':
-            filtered_products = filtered_products.order_by('color__name')
-
-        return paginate_product_list(filtered_products, request)
+class ProductListView(ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductListSerializer
+    filterset_class = ProductFilter
 
 
 class ProductDetailView(APIView):
