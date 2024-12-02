@@ -179,10 +179,6 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
         'celery': {
             'handlers': ['console'],
             'level': 'DEBUG',

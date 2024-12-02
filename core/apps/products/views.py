@@ -33,7 +33,7 @@ class ProductListView(ListAPIView):
     serializer_class = ProductListSerializer
     filterset_class = ProductFilter
     filter_backends = [DjangoFilterBackend]
-    ordering_fields = ['price', 'rate']
+    ordering_fields = ['price', 'rate', 'brand', 'color']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -45,6 +45,8 @@ class ProductListView(ListAPIView):
             return queryset.order_by('-price')
         elif sort == 'rate':
             return queryset.order_by('-rate')
+        else:
+            queryset = queryset.order_by('id')
 
         return queryset
 
