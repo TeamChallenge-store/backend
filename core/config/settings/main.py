@@ -148,22 +148,27 @@ else:
     GS_PROJECT_ID = 'global-matrix-438108-c0'
     GS_LOCATION = 'us'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
-    'https://django.pp.ua',
-    'http://localhost:8000',  # or whatever port your local server is running on
+    'http://localhost:8000',
+    'http://localhost:5173'
 ]
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', 'localhost:8000', '127.0.0.1']
+
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://django.pp.ua',
-    'http://localhost:8000',  # Adjust port if needed
+    'http://localhost:8000',
+    'http://localhost:5173',
 ]
 
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SAMESITE = 'Strict'
+SESSION_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = False
 
 AUTH_USER_MODEL = 'users.User'
 
