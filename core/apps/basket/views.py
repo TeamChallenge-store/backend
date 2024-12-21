@@ -158,7 +158,8 @@ class CartView(APIView):
             serializer = CartAnonymousItemSerializer(cart_items, many=True)
             response_data = {"message": "Anonymous"}
             try:
-                cart_item = cart_items.get(product=product)
+                cart_item = CartAnonymousItem.objects.get(cart=cart, product=product)
+                cart_item.delete()
             except CartAnonymousItem.DoesNotExist:
                 return rest_response(
                     {"error": "Product not found in cart"},
@@ -179,16 +180,13 @@ class CartView(APIView):
             serializer = CartItemSerializer(cart_items, many=True)
             response_data = {"message": user.first_name}
             try:
-                # cart_item = CartItem.objects.get(cart=cart, product=product)
-                cart_item = cart_items.get(product=product)
-
+                cart_item = CartItem.objects.get(cart=cart, product=product)
+                cart_item.delete()
             except CartItem.DoesNotExist:
                 return rest_response(
                     {"error": "Product not found in cart"},
                     status=status.HTTP_404_NOT_FOUND,
                 )
-
-        remove_cart_item.delay(cart.id, product.id)
 
         response_data.update(
             {"success": "Product '" + str(product.name) + "' removed from cart"},

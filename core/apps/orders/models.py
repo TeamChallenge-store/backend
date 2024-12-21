@@ -4,45 +4,8 @@ from core.apps.products.models import Product
 
 
 class Address(models.Model):
-    CITY = [
-        ("Simferopol", 1),
-        ("Vinnytsia", 2),
-        ("Lutsk", 3),
-        ("Dnipro", 4),
-        ("Donetsk", 5),
-        ("Zhytomyr", 6),
-        ("Uzhhorod", 7),
-        ("Zaporizhzhia", 8),
-        ("Ivano-Frankivsk", 9),
-        ("Kyiv", 10),
-        ("Kropyvnytskyi", 11),
-        ("Luhansk", 12),
-        ("Lviv", 13),
-        ("Mykolaiv", 14),
-        ("Odesa", 15),
-        ("Poltava", 16),
-        ("Rivne", 17),
-        ("Sumy", 18),
-        ("Ternopil", 19),
-        ("Kharkiv", 20),
-        ("Kherson", 21),
-        ("Khmelnytskyi", 22),
-        ("Cherkasy", 23),
-        ("Chernivtsi", 24),
-        ("Chernihiv", 25),
-        ("Sevastopol", 26),
-    ]
-
-    def address_promt():
-        return {
-            'streetName': 'string',
-            'houseNumber': 'string',
-            'sectionNumber': 'string',
-            'apartmentNumber': 'string',
-        }
-
-    city = models.CharField(max_length=15, choices=CITY, default="Kyiv")
-    address = models.JSONField(max_length=64, null=True, blank=True, default=address_promt)
+    city = models.CharField(max_length=25, default="Kyiv")
+    address = models.JSONField(max_length=64, null=True, blank=True)
     # street_name = models.CharField(max_length=64, null=True, blank=True)
     # house_number = models.CharField(max_length=64, null=True, blank=True)
     # section_number = models.CharField(max_length=64, null=True, blank=True)

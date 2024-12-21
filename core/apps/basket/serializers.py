@@ -28,6 +28,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartAnonymousItemSerializer(serializers.ModelSerializer):
     product = ProductDetailSerializer()
+    total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = CartAnonymousItem
@@ -35,4 +36,8 @@ class CartAnonymousItemSerializer(serializers.ModelSerializer):
             "id",
             "product",
             "quantity",
+            "total_price"
         ]
+
+    def get_total_price(self, obj):
+        return obj.product.price * obj.quantity
